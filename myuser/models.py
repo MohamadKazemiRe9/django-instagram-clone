@@ -1,6 +1,8 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
+
 
 
 class MyUserManager(BaseUserManager):
@@ -55,6 +57,8 @@ class MyUser(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    photo = models.ImageField(null=True, upload_to="users/%Y/%m/%d")
+    date_of_birth = models.DateField(blank=True, null=True)
 
     objects = MyUserManager()
 

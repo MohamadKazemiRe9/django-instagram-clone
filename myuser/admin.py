@@ -44,8 +44,8 @@ class UserAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {'fields':('email', 'username', 'password')}),
-        ('Personal info', {"fields":('first_name', 'last_name', "phone")}),
-        ('Permissions', {'fields':("is_staff", "is_admin", "is_superuser")})
+        ('Personal info', {"fields":('first_name', 'last_name', "phone", "photo", "date_of_birth")}),
+        ('Permissions', {'fields':("is_active","is_staff", "is_admin", "is_superuser")})
     )
     search_fields = ['email', "phone", "username"]
     filter_horizontal = ()
