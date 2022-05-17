@@ -1,0 +1,7 @@
+<h1>Verify code</h1>
+<hr>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Verify</button>
+</form>

@@ -1,3 +1,4 @@
+from email.policy import default
 from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -54,11 +55,14 @@ class MyUser(AbstractBaseUser):
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     is_active = models.BooleanField(default=True)
+    is_verify = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    photo = models.ImageField(null=True, upload_to="users/%Y/%m/%d")
+    photo = models.ImageField(upload_to="users/%Y/%m/%d", default="users/default.jpg")
     date_of_birth = models.DateField(blank=True, null=True)
+    bio = models.TextField(null=True, blank=True)
+
 
     objects = MyUserManager()
 

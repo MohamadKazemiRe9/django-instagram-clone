@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from cmath import log
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, VerifyRegsitration
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from random import randint
 # Create your views here.
 
 
@@ -40,9 +43,31 @@ def regsiter(request):
                 user.set_password(password)
             else:
                 form = RegistrationForm(initial={'phone':phone, })
+                messages.error(request, "passwords dosn't match!")
                 return render(request, 'account/register.html', {"form":form})
             user.save()
-            return render(request, 'account/register_done.html',{'user':user})
+            login(request, user)
+            verify_code = randint(11111,99999)
+            request.session["verify"] = verify_code
+            print(request.session["verify"])
+            # return render(request, 'account/verify.html',{'user':user})
+            return redirect("verify")
     else:
         form = RegistrationForm()
     return render(request, 'account/register.html', {"form":form})
+
+def verify_register(request):
+    if request.method == "POST":
+        form = VerifyRegsitration(request.POST)
+        if form.is_valid():
+            verify_code = form.cleaned_data["code"]
+            if verify_code == request.session["verify"]:
+                user = request.user
+                user.is_verify = True
+                user.save()
+                return render(request, 'account/register_done.html',{'user':user})
+            else:
+                messages.error(request, "your code in not correct")
+    else:
+        form = VerifyRegsitration()
+        return render(request, "account/verify.html", {'form':form})

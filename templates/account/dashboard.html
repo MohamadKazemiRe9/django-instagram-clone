@@ -374,11 +374,21 @@ img {
 
         <div class="container">
     
+            
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                      <li>{{message}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+                
+
             <div class="profile">
     
                 <div class="profile-image">
     
-                    <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+                    <img src="{{user.photo.url}}" width="200px" height="200px" alt="">
     
                 </div>
     
@@ -386,7 +396,7 @@ img {
     
                     <h1 class="profile-user-name">{{request.user.username}}</h1>
     
-                    <button class="btn profile-edit-btn">Edit Profile</button>
+                    <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
     
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
     
@@ -404,7 +414,9 @@ img {
     
                 <div class="profile-bio">
     
-                    <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+                    <p><span class="profile-real-name">{{user.first_name}} {{user.last_name}}</span> 
+                        {{user.bio}}
+                    </p>
     
                 </div>
     

@@ -1,6 +1,7 @@
-from cProfile import label
 from django import forms
 from myuser.models import MyUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -13,3 +14,6 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         model = MyUser
         fields = ["phone", "username", "email"]
+
+class VerifyRegsitration(forms.Form):
+    code = forms.IntegerField()

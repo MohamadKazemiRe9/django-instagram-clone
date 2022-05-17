@@ -402,6 +402,17 @@ span.language {
                     <div class="header">
                       <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" alt="Instagram">
                     </div><!-- Header end -->
+
+                    {% if messages %}
+                    <ul>
+                      {% for message in messages %}
+                        <li>
+                          {{message}}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %}
+
                     <div class="form-wrap">
                       <form class="form" method="POST">
                         {% csrf_token %}
