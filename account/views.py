@@ -6,6 +6,8 @@ from .forms import LoginForm, RegistrationForm, VerifyRegsitration
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from random import randint
+from . import info
+import requests
 # Create your views here.
 
 
@@ -50,6 +52,7 @@ def regsiter(request):
             verify_code = randint(11111,99999)
             request.session["verify"] = verify_code
             print(request.session["verify"])
+            send_sms(phone, verify_code)
             # return render(request, 'account/verify.html',{'user':user})
             return redirect("verify")
     else:
@@ -71,3 +74,10 @@ def verify_register(request):
     else:
         form = VerifyRegsitration()
         return render(request, "account/verify.html", {'form':form})
+
+
+def send_sms(phone, code):
+    api_key = info.api_key
+    url = f"https://api.kavenegar.com/v1/{api_key}/sms/send.json?receptor={phone}&sender=2000500666&message={code}"
+    result = requests.get(url)
+    print(result)
