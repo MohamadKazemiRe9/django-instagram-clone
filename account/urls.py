@@ -18,5 +18,6 @@ urlpatterns = [
     path("rest/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
     path("register/", views.regsiter, name="register"),
     path("verify/", views.verify_register, name="verify"),
+    path("resend/",views.resend_sms, name="resend"),
 ]
  

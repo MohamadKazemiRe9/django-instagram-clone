@@ -8,6 +8,7 @@ from django.contrib import messages
 from random import randint
 from . import info
 import requests
+import datetime, time
 # Create your views here.
 
 
@@ -51,9 +52,7 @@ def regsiter(request):
             login(request, user)
             verify_code = randint(11111,99999)
             request.session["verify"] = verify_code
-            print(request.session["verify"])
-            send_sms(phone, verify_code)
-            # return render(request, 'account/verify.html',{'user':user})
+            send_sms(request, phone, verify_code)
             return redirect("verify")
     else:
         form = RegistrationForm()
@@ -75,9 +74,22 @@ def verify_register(request):
         form = VerifyRegsitration()
         return render(request, "account/verify.html", {'form':form})
 
+def resend_sms(request):
+    t = datetime.datetime.now()
+    end = time.mktime(t.timetuple())
+    start = request.session.get("time_start")
+    if end - start > 120:
+        send_sms(request, request.user.phone, request.session["verify"])
+        messages.success(request, "messege resended agian")
+    else:
+        messages.error(request, "You must wiat at least 2 minutes")
+    return redirect("verify")
+    
 
-def send_sms(phone, code):
+def send_sms(request, phone, code):
     api_key = info.api_key
     url = f"https://api.kavenegar.com/v1/{api_key}/sms/send.json?receptor={phone}&sender=2000500666&message={code}"
     result = requests.get(url)
-    print(result)
+    t = datetime.datetime.now()
+    start = time.mktime(t.timetuple())
+    request.session["time_start"] = start
