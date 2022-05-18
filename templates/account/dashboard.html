@@ -376,11 +376,20 @@ img {
     
             
             {% if messages %}
-                <ul>
                     {% for message in messages %}
-                      <li>{{message}}</li>
+                          {% if message.tags %}
+                            {% if message.tags == "success" %}
+                                <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                <script>
+                                    Swal.fire(
+                                    '{{message}}',
+                                    "",
+                                    '{{message.tags}}'
+                                    )
+                                </script>
+                            {% endif %}
+                          {% endif %}
                     {% endfor %}
-                </ul>
             {% endif %}
                 
 
@@ -659,8 +668,8 @@ img {
         <!-- End of container -->
     
     </main>
-    
+
     <!-- scripts -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </body>
 </html>
