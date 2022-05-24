@@ -4,5 +4,5 @@ from .models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ["user", "created", "image", "edit_time", "slug", "edited"]
+    list_display = ["user", "created", "image", "edit_time", "edited"]
     list_filter = ("created", "edited")
