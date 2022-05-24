@@ -9,6 +9,7 @@ from random import randint
 from . import info
 import requests
 import datetime, time
+from myuser.models import MyUser
 # Create your views here.
 
 
@@ -31,9 +32,16 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'registration/login.html', {'form':form})
 
+
 @login_required
-def dashboard(request):
-    return render(request, 'account/dashboard.html')
+def dashboard(request, username):
+    try:
+        user = MyUser.objects.get(username=username)
+    except:
+        pass
+    return render(request, 'account/dashboard.html', {"user":user})
+
+
 
 def regsiter(request):
     if request.method == 'POST':
