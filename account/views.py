@@ -38,7 +38,7 @@ def dashboard(request, username):
     try:
         user = MyUser.objects.get(username=username)
     except:
-        pass
+        return render(request, 'account/not_user.html') 
     return render(request, 'account/dashboard.html', {"user":user})
 
 

@@ -41,9 +41,12 @@
 
             <div class="profile-user-settings">
 
-                <h1 class="profile-user-name">{{request.user.username}}</h1>
+                <h1 class="profile-user-name">{{user}}</h1>
 
-                <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
+                
+                {% if request.user == user %}
+                    <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
+                {% endif %}
 
                 <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
 
@@ -52,7 +55,7 @@
             <div class="profile-stats">
 
                 <ul>
-                    <li><span class="profile-stat-count">164</span> posts</li>
+                    <li><span class="profile-stat-count">{{user.user_posts.all|length}}</span> posts</li>
                     <li><span class="profile-stat-count">188</span> followers</li>
                     <li><span class="profile-stat-count">206</span> following</li>
                 </ul>
