@@ -86,7 +86,7 @@
 
             {% for post in user.user_posts.all %}
               
-            <div class="gallery-item" tabindex="0">
+            <a class="gallery-item" tabindex="0" href="#">
 
                 <img src="{{post.image.url}}" class="gallery-image" alt="">
 
@@ -99,13 +99,13 @@
 
                 </div>
 
-            </div>
+            </a>
             {% endfor %}
 
         </div>
         <!-- End of gallery -->
 
-        <div class="loader"></div>
+        <!-- <div class="loader"></div> -->
 
     </div>
     <!-- End of container -->
