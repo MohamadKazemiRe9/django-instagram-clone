@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
 from datetime import datetime
+from django.urls import reverse
 # Create your models here.
 
 class Post(models.Model):
@@ -14,10 +15,14 @@ class Post(models.Model):
     slug = models.SlugField(blank=True, max_length=300)
     user_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="posts_like", blank=True)
 
-    def __str__(self):
+    def __str__(self): 
         return str(self.user)+" "+str(datetime.now())
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(str(self.user)+str(datetime.now()))
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("posts:detail", kwargs={"id": self.id, "slug":self.slug})
+    

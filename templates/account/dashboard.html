@@ -46,9 +46,28 @@
                 
                 {% if request.user == user %}
                     <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
+                    <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i class="fas fa-plus-circle" aria-hidden="true"></i></button>
                 {% endif %}
 
-                <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+                {% comment %} <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button> {% endcomment %}
+                
+                
+
+
+                <script>
+                    let create_post = () => {
+                        Swal.fire({
+                            title:"Create Form",
+                            html: `<form action="{% url 'posts:create' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="file" name="image" id="" class="swal2-input">
+                                <textarea name="caption" class="swal2-input"></textarea>
+                                <button type='submit'>Submit</button>
+                                </form>`,
+                            showConfirmButton : false,
+                        })
+                    }
+                </script>
 
             </div>
 
@@ -86,7 +105,7 @@
 
             {% for post in user.user_posts.all %}
               
-            <a class="gallery-item" tabindex="0" href="#">
+            <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
 
                 <img src="{{post.image.url}}" class="gallery-image" alt="">
 

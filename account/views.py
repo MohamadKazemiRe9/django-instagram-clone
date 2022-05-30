@@ -10,6 +10,7 @@ from . import info
 import requests
 import datetime, time
 from myuser.models import MyUser
+from posts.forms import PostCreateForm
 # Create your views here.
 
 
@@ -35,11 +36,12 @@ def user_login(request):
 
 @login_required
 def dashboard(request, username):
+    form = PostCreateForm()
     try:
         user = MyUser.objects.get(username=username)
     except:
         return render(request, 'account/not_user.html') 
-    return render(request, 'account/dashboard.html', {"user":user})
+    return render(request, 'account/dashboard.html', {"user":user, 'form':form})
 
 
 
