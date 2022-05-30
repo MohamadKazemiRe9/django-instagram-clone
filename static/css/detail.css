@@ -92,3 +92,7 @@ body section .description strong {
         transform: scale(1);
    }
 }
+
+.active{
+    fill: red;
+}
