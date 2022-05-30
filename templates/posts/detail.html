@@ -61,7 +61,14 @@
         e.preventDefault();
         var fd = new FormData();
         fd.append("id", btn_like.getAttribute("data-id"));
-        fd.append("action", btn_like.getAttribute("data-action"));
+        // fd.append("action", btn_like.getAttribute("data-action"));
+        let activate;
+        if (btn_like.classList.contains("active")){
+            activate = "dislike";
+        }else{
+            activate = "like";
+        }
+        fd.append("action", activate);
         fd.append("csrfmiddlewaretoken", "{{csrf_token}}");
         axios.post("/posts/like/", fd)
         .then((res)=>{
