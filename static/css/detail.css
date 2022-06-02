@@ -96,3 +96,9 @@ body section .description strong {
 .active{
     fill: red;
 }
+
+a{
+    text-decoration: none;
+    color: #050505;
+    font-weight: 100;
+}

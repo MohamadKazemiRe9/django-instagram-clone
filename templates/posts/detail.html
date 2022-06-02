@@ -52,11 +52,29 @@
         </svg>
       </a>
     </div>
+    
+    <div id="like-container">
+        <div class="description" id="like-body">
+            <strong id="like-numbers">{{post.user_like.all|length}}</strong>
+            <span id="like-word">
+                {% if post.user_like.all|length > 1 %}
+                Likes
+                {% else %}
+                Like
+                {% endif %}
+            </span>
+        </div>
+    </div>
+        
     <div class="description"><strong>{{post.user}}&nbsp;&nbsp;</strong>{{post.caption}}</div>
   </section>
 
   <script>
       let btn_like = document.querySelector("a.like");
+      let like_numbers = document.getElementById("like-numbers");
+      let like_word = document.getElementById("like-word");
+      let like_body = document.getElementById("like-body");
+      let like_container = document.getElementById("like-container");
       btn_like.addEventListener("click", function(e){
         e.preventDefault();
         var fd = new FormData();
@@ -73,6 +91,20 @@
         axios.post("/posts/like/", fd)
         .then((res)=>{
             btn_like.classList.toggle("active");
+            if (activate == "like"){
+                like_numbers.innerHTML = parseInt(like_numbers.innerHTML) + 1
+                if(parseInt(like_numbers.innerHTML) >= 2){
+                    like_word.innerHTML = "Likes";
+                }
+            }else{
+                like_numbers.innerHTML = parseInt(like_numbers.innerHTML) - 1
+                if (parseInt(like_numbers.innerHTML) == 1){
+                    like_word.innerHTML = "Like";
+                }
+                // else if(parseInt(like_numbers.innerHTML) == 0){
+                //     like_body.remove();
+                // }
+            }
         })
         .catch(()=>{
             console.log(res.data);

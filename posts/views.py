@@ -33,7 +33,6 @@ def post_detail(request, id, slug):
 def post_like(request):
     post_id = request.POST.get("id")
     action = request.POST.get("action")
-    print(post_id, action)
     if post_id and action:
         try:
             post = Post.objects.get(id=post_id)
