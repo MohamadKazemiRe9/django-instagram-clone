@@ -27,8 +27,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script>
+        // ajax like post
         let btn_like = document.querySelector("a.like");
         let like_numbers = document.getElementById("like-numbers");
         let like_word = document.getElementById("like-word");
@@ -67,6 +68,57 @@
                 })
                 .catch(() => {
                     console.log(res.data);
+                })
+        });
+
+
+        // comment ajax
+        let submitComment = document.getElementById("comment-submit-id");
+        let textareaComment = document.getElementById("comment-textarea-id");
+        let commentsContainer = document.getElementById("comments-container-id");
+        let commentDates = document.getElementsByClassName("comment-date");
+
+        for (let item = 0; item < commentDates.length; item++) {
+            commentDates[item].textContent = commentDates[item].textContent.split(",")[0]
+        }
+
+        submitComment.addEventListener("click", (e) => {
+            e.preventDefault();
+            var cmfd = new FormData();
+            cmfd.append('text', textareaComment.value);
+            cmfd.append("csrfmiddlewaretoken", "{{csrf_token}}");
+            axios.post("", cmfd)
+                .then(() => {
+                    let _html = commentsContainer.innerHTML;
+                    commentsContainer.innerHTML = "";
+                    commentsContainer.innerHTML += `
+      <div class="comments animate__animated animate__fadeInDown">
+        <div class="comment-profile">
+            <img src="{{request.user.photo.url}}" alt="">
+        </div>
+        <div class="comment-main">
+            <div class="comment-text">
+                <a class="user" href="{% url 'profile' request.user %}"><strong>{{request.user}}</strong></a>
+                ${textareaComment.value}
+            </div>
+            <div class="comment-info">
+                <div class="comment-date">0s</div>
+                <div class="comment-likes">
+                    <span class="like-counts">0</span> <span class="like-word">Like</span>
+                </div>
+                <div class="comment-reply">Reply</div>
+            </div>
+        </div>
+        <div class="comment-like">
+            <i class="far fa-heart"></i>
+        </div>
+      </div>
+      `;
+                    commentsContainer.innerHTML += _html;
+                    textareaComment.value = "";
+                })
+                .catch(() => {
+                    console.log("error");
                 })
         });
     </script>

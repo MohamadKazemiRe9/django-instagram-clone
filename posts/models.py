@@ -37,4 +37,4 @@ class PostComment(models.Model):
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="comments_like", blank=True)
 
     def __str__(self):
-        return f"{self.post.id} {self.user}"
+        return f"post : {self.post.id} comment : {self.id} and user: {self.user}"

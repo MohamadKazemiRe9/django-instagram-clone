@@ -141,9 +141,30 @@ a{
 
 .comment-info{
     display: grid;
-    grid-template-columns: 10% 12% 15%;
+    grid-template-columns: 20% 20% 15%;
 }
 
 .comment-form{
     margin: 2em 0;
+}
+
+.user{
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+}
+.user > img{
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    border: 2px solid rgb(218, 8, 183);
+    margin-right: 5px;
+}
+.user>a{
+    text-decoration: none;
+    color: #333;
+}
+
+.heart-active{
+    color: red;
 }

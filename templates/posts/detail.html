@@ -9,7 +9,12 @@
 {% block content %}
 <section>
   <div class="header">
-    <a class="user" href="{% url 'profile' post.user %}">{{post.user}}</a>
+    <div class="user">
+      <img src="{{post.user.photo.url}}" alt="">
+      <a href="{% url 'profile' post.user %}">
+          <strong>{{post.user}}</strong>
+      </a>
+    </div>
     <div class="param">
       <svg aria-label="Plus d’options" class="_8-yf5 " fill="#262626" height="16" role="img" viewBox="0 0 48 48"
         width="16">
@@ -93,67 +98,82 @@
             {{cm.text}}
         </div>
         <div class="comment-info">
-            <div class="comment-date">19h</div>
+            <div class="comment-date">{{cm.created|timesince}}</div>
             <div class="comment-likes">
               {% if cm.likes.all|length > 1 %}
-                {{cm.likes.all|length}} likes
+                <span class="like-counts">{{cm.likes.all|length}}</span> <span class="like-word">Likes</span>
               {% else %}
-                {{cm.likes.all|length}} like
+                <span class="like-counts">{{cm.likes.all|length}}</span> <span class="like-word">Like</span>
               {% endif %}
             </div>
             <div class="comment-reply">Reply</div>
         </div>
     </div>
-    <div class="comment-like">
+    <div class="comment-like" data-id="{{cm.id}}" data-action="{% if request.user in cm.likes.all %}dis{% endif %}like">
+      {% if request.user in cm.likes.all %}
+        <i class="fas fa-heart heart-active"></i>
+      {% else %}
         <i class="far fa-heart"></i>
+      {% endif %}
+      
+        
     </div>
   </div>
   {% endfor %}
 </div>
 
 <script>
-  let submitComment = document.getElementById("comment-submit-id");
-  let textareaComment = document.getElementById("comment-textarea-id");
-  let commentsContainer = document.getElementById("comments-container-id");
+let btnHearts = document.getElementsByClassName("comment-like");
+for (let index in btnHearts){
+  btnHearts[index].addEventListener("click", ()=>{
+    let id = btnHearts[index].getAttribute("data-id");
+    let action = btnHearts[index].getAttribute("data-action");
+    let heartIcon = btnHearts[index].getElementsByClassName("fa-heart")[0];
+    let commentLikes = document.getElementsByClassName("comment-likes")[index];
+    let likeNumbers = (commentLikes.getElementsByClassName("like-counts")[0]);
+    let likeWord = commentLikes.getElementsByClassName("like-word")[0];
 
-  submitComment.addEventListener("click", (e)=>{
-    e.preventDefault();
-    var cmfd = new FormData();
-    cmfd.append('text', textareaComment.value);
-    cmfd.append("csrfmiddlewaretoken", "{{csrf_token}}");
-    axios.post("", cmfd)
-    .then(()=>{
-      let _html = commentsContainer.innerHTML;
-      commentsContainer.innerHTML = "";
-      commentsContainer.innerHTML += `
-      <div class="comments animate__animated animate__fadeInDown">
-        <div class="comment-profile">
-            <img src="{{request.user.photo.url}}" alt="">
-        </div>
-        <div class="comment-main">
-            <div class="comment-text">
-                <a class="user" href="{% url 'profile' request.user %}"><strong>{{request.user}}</strong></a>
-                ${textareaComment.value}
-            </div>
-            <div class="comment-info">
-                <div class="comment-date">0s</div>
-                <div class="comment-likes">
-                  0 Like
-                </div>
-                <div class="comment-reply">Reply</div>
-            </div>
-        </div>
-        <div class="comment-like">
-            <i class="far fa-heart"></i>
-        </div>
-      </div>
-      `;
-      commentsContainer.innerHTML += _html;
-      textareaComment.value = "";
+    var cmLikeFd = new FormData();
+    cmLikeFd.append("id", id);
+    cmLikeFd.append("action", action);
+    cmLikeFd.append("csrfmiddlewaretoken", "{{csrf_token}}");
+    axios.post("", cmLikeFd)
+    .then((e)=>{
+      if (action == "like"){
+        heartIcon.classList.remove("far");
+        heartIcon.classList.add("fas");
+        heartIcon.classList.add("heart-active");
+        btnHearts[index].setAttribute("data-action", "dislike");
+        // commentLikes.textContent = "";
+        if (parseInt(likeNumbers.textContent) >= 1){
+          likeNumbers.textContent = (parseInt(likeNumbers.textContent) + 1);
+          likeWord.textContent = "Likes"
+        }else{
+          likeNumbers.textContent = (parseInt(likeNumbers.textContent) + 1);
+          likeWord.textContent = "Like";
+        }
+        
+      }else{
+        heartIcon.classList.remove("fas");
+        heartIcon.classList.remove("heart-active");
+        heartIcon.classList.add("far");
+        btnHearts[index].setAttribute("data-action", "like");
+        
+        if (parseInt(likeNumbers.textContent) <= 2){
+          likeNumbers.textContent = (parseInt(likeNumbers.textContent) - 1);
+          likeWord.textContent = "Like"
+        }else{
+          likeNumbers.textContent = (parseInt(likeNumbers.textContent) - 1);
+          likeWord.textContent = "Likes"
+        }
+      }
+      
+      console.log(e.status)
     })
-    .catch(()=>{
-      console.log("error");
+    .catch((e)=>{
+      console.log(e.status)
     })
   });
+}
 </script>
 {% endblock content %}
