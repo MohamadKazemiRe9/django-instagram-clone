@@ -1,7 +1,7 @@
 from ast import expr_context
 from turtle import pos
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostCreateForm
+from .forms import PostCreateForm, PostCommentForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -26,7 +26,18 @@ def post_create(request):
 
 def post_detail(request, id, slug):
     post = get_object_or_404(Post, id=id, slug=slug)
-    return render(request, "posts/detail.html", {"post":post})
+    form = PostCommentForm()
+    if request.method == "POST":
+        form = PostCommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.user = request.user
+            new_comment.post = post
+            new_comment.save()
+            form = PostCommentForm()
+            return render(request, "posts/detail.html", {"post":post, "form":form})
+    else:
+        return render(request, "posts/detail.html", {"post":post, "form":form})
 
 @login_required
 @require_POST

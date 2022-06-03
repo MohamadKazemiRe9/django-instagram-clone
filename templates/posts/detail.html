@@ -73,24 +73,33 @@
 </section>
 
 <div class="comment-form">
-  <form action="">
-      <textarea name="" id="" class="comment-textarea" placeholder="Comment here"></textarea>
+  <form action="" method="POST">
+      {% csrf_token %}
+      <textarea name="text" id="" class="comment-textarea" placeholder="Comment here"></textarea>
+      {% comment %} {{form.as_p}} {% endcomment %}
       <button class="comment-submit" type="submit">post</button>
   </form>
 </div>
 
+{% for cm in post.comments.all %}
 <div class="comments">
   <div class="comment-profile">
-      <img src="./images/image.jpg" alt="">
+      <img src="{{cm.user.photo.url}}" alt="">
   </div>
   <div class="comment-main">
       <div class="comment-text">
-          <strong>Asghar_seyedzade</strong>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias cum dolores architecto, necessitatibus illum molestias ad enim magni deleniti veritatis dicta nam, amet officia at ullam
+          <a class="user" href="{% url 'profile' cm.user %}"><strong>{{cm.user}}</strong></a>
+          {{cm.text}}
       </div>
       <div class="comment-info">
           <div class="comment-date">19h</div>
-          <div class="comment-likes">10 likes</div>
+          <div class="comment-likes">
+            {% if cm.likes.all|length > 1 %}
+              {{cm.likes.all|length}} likes
+            {% else %}
+              {{cm.likes.all|length}} like
+            {% endif %}
+          </div>
           <div class="comment-reply">Reply</div>
       </div>
   </div>
@@ -98,6 +107,7 @@
       <i class="far fa-heart"></i>
   </div>
 </div>
+{% endfor %}
 
 <script>
   let btn_like = document.querySelector("a.like");

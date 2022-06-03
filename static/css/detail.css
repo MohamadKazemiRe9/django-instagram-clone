@@ -125,7 +125,7 @@ a{
     grid-template-columns: 10% 70% 10%;
     gap: 2%;
     align-items: center;
-    height: 50px;
+    margin-bottom: 3em;
 }
 .comment-profile>img{
     height: 3em;
@@ -145,5 +145,5 @@ a{
 }
 
 .comment-form{
-    margin: 10px 0;
+    margin: 2em 0;
 }
