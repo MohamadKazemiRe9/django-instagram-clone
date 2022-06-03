@@ -75,80 +75,82 @@
 <div class="comment-form">
   <form action="" method="POST">
       {% csrf_token %}
-      <textarea name="text" id="" class="comment-textarea" placeholder="Comment here"></textarea>
+      <textarea name="text" id="comment-textarea-id" class="comment-textarea" placeholder="Comment here"></textarea>
       {% comment %} {{form.as_p}} {% endcomment %}
-      <button class="comment-submit" type="submit">post</button>
+      <button class="comment-submit" id="comment-submit-id" type="submit">post</button>
   </form>
 </div>
 
-{% for cm in post.comments.all %}
-<div class="comments">
-  <div class="comment-profile">
-      <img src="{{cm.user.photo.url}}" alt="">
+<div id="comments-container-id">
+  {% for cm in post.comments.all %}
+  <div class="comments">
+    <div class="comment-profile">
+        <img src="{{cm.user.photo.url}}" alt="">
+    </div>
+    <div class="comment-main">
+        <div class="comment-text">
+            <a class="user" href="{% url 'profile' cm.user %}"><strong>{{cm.user}}</strong></a>
+            {{cm.text}}
+        </div>
+        <div class="comment-info">
+            <div class="comment-date">19h</div>
+            <div class="comment-likes">
+              {% if cm.likes.all|length > 1 %}
+                {{cm.likes.all|length}} likes
+              {% else %}
+                {{cm.likes.all|length}} like
+              {% endif %}
+            </div>
+            <div class="comment-reply">Reply</div>
+        </div>
+    </div>
+    <div class="comment-like">
+        <i class="far fa-heart"></i>
+    </div>
   </div>
-  <div class="comment-main">
-      <div class="comment-text">
-          <a class="user" href="{% url 'profile' cm.user %}"><strong>{{cm.user}}</strong></a>
-          {{cm.text}}
-      </div>
-      <div class="comment-info">
-          <div class="comment-date">19h</div>
-          <div class="comment-likes">
-            {% if cm.likes.all|length > 1 %}
-              {{cm.likes.all|length}} likes
-            {% else %}
-              {{cm.likes.all|length}} like
-            {% endif %}
-          </div>
-          <div class="comment-reply">Reply</div>
-      </div>
-  </div>
-  <div class="comment-like">
-      <i class="far fa-heart"></i>
-  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 
 <script>
-  let btn_like = document.querySelector("a.like");
-  let like_numbers = document.getElementById("like-numbers");
-  let like_word = document.getElementById("like-word");
-  let like_body = document.getElementById("like-body");
-  let like_container = document.getElementById("like-container");
-  btn_like.addEventListener("click", function (e) {
+  let submitComment = document.getElementById("comment-submit-id");
+  let textareaComment = document.getElementById("comment-textarea-id");
+  let commentsContainer = document.getElementById("comments-container-id");
+
+  submitComment.addEventListener("click", (e)=>{
     e.preventDefault();
-    var fd = new FormData();
-    fd.append("id", btn_like.getAttribute("data-id"));
-    // fd.append("action", btn_like.getAttribute("data-action"));
-    let activate;
-    if (btn_like.classList.contains("active")) {
-      activate = "dislike";
-    } else {
-      activate = "like";
-    }
-    fd.append("action", activate);
-    fd.append("csrfmiddlewaretoken", "{{csrf_token}}");
-    axios.post("/posts/like/", fd)
-      .then((res) => {
-        btn_like.classList.toggle("active");
-        if (activate == "like") {
-          like_numbers.innerHTML = parseInt(like_numbers.innerHTML) + 1
-          if (parseInt(like_numbers.innerHTML) >= 2) {
-            like_word.innerHTML = "Likes";
-          }
-        } else {
-          like_numbers.innerHTML = parseInt(like_numbers.innerHTML) - 1
-          if (parseInt(like_numbers.innerHTML) == 1) {
-            like_word.innerHTML = "Like";
-          }
-          // else if(parseInt(like_numbers.innerHTML) == 0){
-          //     like_body.remove();
-          // }
-        }
-      })
-      .catch(() => {
-        console.log(res.data);
-      })
+    var cmfd = new FormData();
+    cmfd.append('text', textareaComment.value);
+    cmfd.append("csrfmiddlewaretoken", "{{csrf_token}}");
+    axios.post("", cmfd)
+    .then(()=>{
+      commentsContainer.innerHTML += `
+      <div class="comments">
+        <div class="comment-profile">
+            <img src="{{request.user.photo.url}}" alt="">
+        </div>
+        <div class="comment-main">
+            <div class="comment-text">
+                <a class="user" href="{% url 'profile' request.user %}"><strong>{{request.user}}</strong></a>
+                ${textareaComment.value}
+            </div>
+            <div class="comment-info">
+                <div class="comment-date">0s</div>
+                <div class="comment-likes">
+                  0 Like
+                </div>
+                <div class="comment-reply">Reply</div>
+            </div>
+        </div>
+        <div class="comment-like">
+            <i class="far fa-heart"></i>
+        </div>
+      </div>
+      `;
+      textareaComment.value = "";
+    })
+    .catch(()=>{
+      console.log("error");
+    })
   });
 </script>
 {% endblock content %}

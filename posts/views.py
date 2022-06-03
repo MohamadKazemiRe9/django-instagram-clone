@@ -30,12 +30,15 @@ def post_detail(request, id, slug):
     if request.method == "POST":
         form = PostCommentForm(request.POST)
         if form.is_valid():
-            new_comment = form.save(commit=False)
-            new_comment.user = request.user
-            new_comment.post = post
-            new_comment.save()
-            form = PostCommentForm()
-            return render(request, "posts/detail.html", {"post":post, "form":form})
+            try:
+                new_comment = form.save(commit=False)
+                new_comment.user = request.user
+                new_comment.post = post
+                new_comment.save()
+                form = PostCommentForm()
+                return JsonResponse({'status':"ok"})
+            except:
+                return JsonResponse({'status':"error"})
     else:
         return render(request, "posts/detail.html", {"post":post, "form":form})
 
