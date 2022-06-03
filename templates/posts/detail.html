@@ -123,8 +123,10 @@
     cmfd.append("csrfmiddlewaretoken", "{{csrf_token}}");
     axios.post("", cmfd)
     .then(()=>{
+      let _html = commentsContainer.innerHTML;
+      commentsContainer.innerHTML = "";
       commentsContainer.innerHTML += `
-      <div class="comments">
+      <div class="comments animate__animated animate__fadeInDown">
         <div class="comment-profile">
             <img src="{{request.user.photo.url}}" alt="">
         </div>
@@ -146,6 +148,7 @@
         </div>
       </div>
       `;
+      commentsContainer.innerHTML += _html;
       textareaComment.value = "";
     })
     .catch(()=>{
