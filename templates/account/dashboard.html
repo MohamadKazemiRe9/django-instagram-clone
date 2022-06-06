@@ -10,7 +10,7 @@
 {% block content %}
 <header>
 
-    <div class="container">
+    <div class="container" id="container-id">
 
         
         {% if messages %}
@@ -103,7 +103,7 @@
 
         <div class="gallery">
 
-            {% for post in user.user_posts.all %}
+            {% for post in posts %}
               
             <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
 
@@ -132,6 +132,35 @@
 </main>
 
 <!-- scripts -->
+<script>
+    let container = document.getElementsByClassName("container")[1];
+    let gallery = document.getElementsByClassName("gallery")[0];
+    let page = 1;
+    let emptyPage = false;
+    let blockRequest = false;
+
+    document.addEventListener("scroll", function(){
+        let contentHeight = window.innerHeight;
+        let yOffset = window.pageYOffset;
+        let clientHight = document.body.clientHeight;
+        
+        if (contentHeight+yOffset > clientHight + 10 && emptyPage == false && blockRequest == false){
+            blockRequest = true;
+            page += 1;
+            axios.get("", {
+                params: {
+                    page:page,
+                }
+            }).then((result) => {
+                gallery.innerHTML += result.data.status;
+                blockRequest = false;
+            //   console.log(result.data.status)  
+            }).catch((err) => {
+                console.log("error")
+            });
+        }
+    })
+</script>
 
 {% endblock content %}
     

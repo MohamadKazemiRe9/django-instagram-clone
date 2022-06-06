@@ -1,0 +1,19 @@
+{% for post in posts %}
+
+<a class="gallery-item animate__animated animate__fadeInUp" tabindex="0" href="{{ post.get_absolute_url }}">
+
+    <img src="{{post.image.url}}" class="gallery-image" alt="">
+
+    <div class="gallery-item-info">
+
+        <ul>
+            <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart"
+                    aria-hidden="true"></i> {{post.user_like.all|length}}</li>
+            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment"
+                    aria-hidden="true"></i> 2</li>
+        </ul>
+
+    </div>
+
+</a>
+{% endfor %}

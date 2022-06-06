@@ -115,65 +115,12 @@
       {% else %}
         <i class="far fa-heart"></i>
       {% endif %}
-      
-        
     </div>
   </div>
   {% endfor %}
 </div>
 
 <script>
-let btnHearts = document.getElementsByClassName("comment-like");
-for (let index in btnHearts){
-  btnHearts[index].addEventListener("click", ()=>{
-    let id = btnHearts[index].getAttribute("data-id");
-    let action = btnHearts[index].getAttribute("data-action");
-    let heartIcon = btnHearts[index].getElementsByClassName("fa-heart")[0];
-    let commentLikes = document.getElementsByClassName("comment-likes")[index];
-    let likeNumbers = (commentLikes.getElementsByClassName("like-counts")[0]);
-    let likeWord = commentLikes.getElementsByClassName("like-word")[0];
 
-    var cmLikeFd = new FormData();
-    cmLikeFd.append("id", id);
-    cmLikeFd.append("action", action);
-    cmLikeFd.append("csrfmiddlewaretoken", "{{csrf_token}}");
-    axios.post("", cmLikeFd)
-    .then((e)=>{
-      if (action == "like"){
-        heartIcon.classList.remove("far");
-        heartIcon.classList.add("fas");
-        heartIcon.classList.add("heart-active");
-        btnHearts[index].setAttribute("data-action", "dislike");
-        // commentLikes.textContent = "";
-        if (parseInt(likeNumbers.textContent) >= 1){
-          likeNumbers.textContent = (parseInt(likeNumbers.textContent) + 1);
-          likeWord.textContent = "Likes"
-        }else{
-          likeNumbers.textContent = (parseInt(likeNumbers.textContent) + 1);
-          likeWord.textContent = "Like";
-        }
-        
-      }else{
-        heartIcon.classList.remove("fas");
-        heartIcon.classList.remove("heart-active");
-        heartIcon.classList.add("far");
-        btnHearts[index].setAttribute("data-action", "like");
-        
-        if (parseInt(likeNumbers.textContent) <= 2){
-          likeNumbers.textContent = (parseInt(likeNumbers.textContent) - 1);
-          likeWord.textContent = "Like"
-        }else{
-          likeNumbers.textContent = (parseInt(likeNumbers.textContent) - 1);
-          likeWord.textContent = "Likes"
-        }
-      }
-      
-      console.log(e.status)
-    })
-    .catch((e)=>{
-      console.log(e.status)
-    })
-  });
-}
 </script>
 {% endblock content %}

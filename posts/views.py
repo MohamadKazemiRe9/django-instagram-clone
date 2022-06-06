@@ -56,7 +56,7 @@ def post_detail(request, id, slug):
                     new_comment.post = post
                     new_comment.save()
                     form = PostCommentForm()
-                    return JsonResponse({'status':"ok"})
+                    return JsonResponse({'status':"ok", "id":new_comment.id})
                 except:
                     return JsonResponse({'status':"error"})
     else:

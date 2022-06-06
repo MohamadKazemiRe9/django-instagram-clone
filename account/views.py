@@ -1,7 +1,7 @@
 from cmath import log
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .forms import LoginForm, RegistrationForm, VerifyRegsitration
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,6 +11,9 @@ import requests
 import datetime, time
 from myuser.models import MyUser
 from posts.forms import PostCreateForm
+from posts.models import Post
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.loader import render_to_string
 # Create your views here.
 
 
@@ -37,11 +40,18 @@ def user_login(request):
 @login_required
 def dashboard(request, username):
     form = PostCreateForm()
-    try:
-        user = MyUser.objects.get(username=username)
-    except:
-        return render(request, 'account/not_user.html') 
-    return render(request, 'account/dashboard.html', {"user":user, 'form':form})
+    user = MyUser.objects.get(username=username)
+    posts = Post.objects.filter(user=user)
+    paginator = Paginator(posts, 4)
+    page = request.GET.get("page")
+    if page:
+        posts = paginator.page(page)
+        return JsonResponse({
+            "status":render_to_string("account/dashboard_posts_ajax.html", {"posts":posts}, request=request)
+        })
+    else:
+        posts = paginator.page(1)
+    return render(request, 'account/dashboard.html', {"user":user, 'form':form, "posts":posts})
 
 
 
