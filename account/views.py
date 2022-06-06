@@ -41,16 +41,21 @@ def user_login(request):
 def dashboard(request, username):
     form = PostCreateForm()
     user = MyUser.objects.get(username=username)
-    posts = Post.objects.filter(user=user)
-    paginator = Paginator(posts, 4)
-    page = request.GET.get("page")
-    if page:
-        posts = paginator.page(page)
-        return JsonResponse({
-            "status":render_to_string("account/dashboard_posts_ajax.html", {"posts":posts}, request=request)
-        })
-    else:
+    posts = Post.objects.filter(user=user).order_by("-created")
+    paginator = Paginator(posts, 6)
+    try:
+        page = request.GET.get("page")
+        if page:
+            posts = paginator.page(page)
+            return JsonResponse({
+                "status":render_to_string("account/dashboard_posts_ajax.html", {"posts":posts}, request=request)
+            })
+        else:
+            posts = paginator.page(1)
+    except PageNotAnInteger:
         posts = paginator.page(1)
+    except EmptyPage:
+        return JsonResponse({"status":"empty"})
     return render(request, 'account/dashboard.html', {"user":user, 'form':form, "posts":posts})
 
 

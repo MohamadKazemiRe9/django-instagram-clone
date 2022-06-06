@@ -3,33 +3,33 @@
 
 
 {% block style %}
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock style %}
-    
+
 
 {% block content %}
 <header>
 
     <div class="container" id="container-id">
 
-        
+
         {% if messages %}
-                {% for message in messages %}
-                      {% if message.tags %}
-                        {% if message.tags == "success" %}
-                            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                            <script>
-                                Swal.fire(
-                                '{{message}}',
-                                "",
-                                '{{message.tags}}'
-                                )
-                            </script>
-                        {% endif %}
-                      {% endif %}
-                {% endfor %}
+        {% for message in messages %}
+        {% if message.tags %}
+        {% if message.tags == "success" %}
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Swal.fire(
+                '{{message}}',
+                "",
+                '{{message.tags}}'
+            )
+        </script>
         {% endif %}
-            
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
 
         <div class="profile">
 
@@ -43,28 +43,30 @@
 
                 <h1 class="profile-user-name">{{user}}</h1>
 
-                
+
                 {% if request.user == user %}
-                    <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
-                    <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i class="fas fa-plus-circle" aria-hidden="true"></i></button>
+                <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
+                <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i
+                        class="fas fa-plus-circle" aria-hidden="true"></i></button>
                 {% endif %}
 
-                {% comment %} <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button> {% endcomment %}
-                
-                
+                {% comment %} <button class="btn profile-settings-btn" aria-label="profile settings"><i
+                        class="fas fa-cog" aria-hidden="true"></i></button> {% endcomment %}
+
+
 
 
                 <script>
                     let create_post = () => {
                         Swal.fire({
-                            title:"Create Form",
+                            title: "Create Form",
                             html: `<form action="{% url 'posts:create' %}" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="file" name="image" id="" class="swal2-input">
                                 <textarea name="caption" class="swal2-input"></textarea>
                                 <button type='submit'>Submit</button>
                                 </form>`,
-                            showConfirmButton : false,
+                            showConfirmButton: false,
                         })
                     }
                 </script>
@@ -83,7 +85,7 @@
 
             <div class="profile-bio">
 
-                <p><span class="profile-real-name">{{user.first_name}} {{user.last_name}}</span> 
+                <p><span class="profile-real-name">{{user.first_name}} {{user.last_name}}</span>
                     {{user.bio}}
                 </p>
 
@@ -104,7 +106,7 @@
         <div class="gallery">
 
             {% for post in posts %}
-              
+
             <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
 
                 <img src="{{post.image.url}}" class="gallery-image" alt="">
@@ -112,8 +114,10 @@
                 <div class="gallery-item-info">
 
                     <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> {{post.user_like.all|length}}</li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> 2</li>
+                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
+                                class="fas fa-heart" aria-hidden="true"></i> {{post.user_like.all|length}}</li>
+                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
+                                class="fas fa-comment" aria-hidden="true"></i> 2</li>
                     </ul>
 
                 </div>
@@ -139,22 +143,33 @@
     let emptyPage = false;
     let blockRequest = false;
 
-    document.addEventListener("scroll", function(){
+    document.addEventListener("scroll", function () {
         let contentHeight = window.innerHeight;
         let yOffset = window.pageYOffset;
         let clientHight = document.body.clientHeight;
-        
-        if (contentHeight+yOffset > clientHight + 10 && emptyPage == false && blockRequest == false){
+        let galleryItems = document.getElementsByClassName("gallery-item");
+
+        if (contentHeight + yOffset > clientHight + 10 && emptyPage == false && blockRequest == false) {
             blockRequest = true;
             page += 1;
             axios.get("", {
                 params: {
-                    page:page,
+                    page: page,
                 }
             }).then((result) => {
-                gallery.innerHTML += result.data.status;
-                blockRequest = false;
-            //   console.log(result.data.status)  
+                if (result.data.status === "empty") {
+                    emptyPage = true;
+                } else {
+                    gallery.innerHTML += result.data.status;
+                    blockRequest = false;
+                    window.setTimeout(() => {
+                        for (let i = 0; i < galleryItems.length; i++) {
+                            if (galleryItems[i].classList.contains("animate__fadeInUp")) {
+                                galleryItems[i].classList.remove("animate__fadeInUp");
+                            }
+                        }
+                    }, 1000);
+                }
             }).catch((err) => {
                 console.log("error")
             });
@@ -163,4 +178,3 @@
 </script>
 
 {% endblock content %}
-    
