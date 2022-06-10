@@ -62,6 +62,7 @@ class MyUser(AbstractBaseUser):
     photo = models.ImageField(upload_to="users/%Y/%m/%d", default="users/default.jpg")
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(null=True, blank=True)
+    following = models.ManyToManyField("self", through="Contact", related_name="followers", symmetrical=False)
 
 
     objects = MyUserManager()
@@ -80,3 +81,11 @@ class MyUser(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
+class Contact(models.Model):
+    user_from = models.ForeignKey(MyUser, related_name="rel_from_set", on_delete=models.CASCADE)
+    user_to = models.ForeignKey(MyUser, related_name="rel_to_set", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.user_from} follows {self.user_to}"

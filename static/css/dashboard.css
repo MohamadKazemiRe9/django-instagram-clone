@@ -363,3 +363,14 @@ img {
         }
     }
 }
+
+.follow-btn{
+    background-color: rgb(0,149,246);
+    width: 8em;
+    height: 2.7em;
+    color: #fff;
+    border: hidden;
+    border-radius: 0.2em;
+    margin-left: 1em;
+    cursor: pointer;
+}

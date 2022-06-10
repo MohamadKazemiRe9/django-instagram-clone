@@ -1,4 +1,5 @@
 from cmath import log
+import json
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, JsonResponse
@@ -9,11 +10,12 @@ from random import randint
 from . import info
 import requests
 import datetime, time
-from myuser.models import MyUser
+from myuser.models import MyUser, Contact
 from posts.forms import PostCreateForm
 from posts.models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
 # Create your views here.
 
 
@@ -40,7 +42,10 @@ def user_login(request):
 @login_required
 def dashboard(request, username):
     form = PostCreateForm()
-    user = MyUser.objects.get(username=username)
+    try:
+        user = MyUser.objects.get(username=username)
+    except:
+        return render(request, "account/not_user.html", {})
     posts = Post.objects.filter(user=user).order_by("-created")
     paginator = Paginator(posts, 6)
     try:
@@ -119,3 +124,20 @@ def send_sms(request, phone, code):
     t = datetime.datetime.now()
     start = time.mktime(t.timetuple())
     request.session["time_start"] = start
+
+@login_required
+@require_POST
+def user_follow(request):
+    user_id = request.POST.get("id")
+    action = request.POST.get("action")
+    if user_id and action:
+        try:
+            user = MyUser.objects.get(id=user_id)
+            if action == "follow":
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+            return JsonResponse({"status":"Ok"})
+        except:
+            return JsonResponse({"status":"error"})
+    return JsonResponse({"status":"error"})

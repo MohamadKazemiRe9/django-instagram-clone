@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
@@ -18,6 +19,7 @@ urlpatterns = [
     path("register/", views.regsiter, name="register"),
     path("verify/", views.verify_register, name="verify"),
     path("resend/",views.resend_sms, name="resend"),
+    path("follow/", views.user_follow, name="follow"),
     path("<str:username>/", views.dashboard, name="profile"),
 ]
  

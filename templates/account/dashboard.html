@@ -48,6 +48,15 @@
                 <a href="{% url 'user:edit' %}" class="btn profile-edit-btn">Edit Profile</a>
                 <button class="btn profile-settings-btn" aria-label="profile settings" onclick="create_post()"><i
                         class="fas fa-plus-circle" aria-hidden="true"></i></button>
+                {% else %}
+                    <button class="follow-btn" id="follow-btn-id" data-id="{{user.id}}" data-action="{% if request.user in user.followers.all %}unfollow{% else %}follow{% endif %}">
+                            {% if request.user in user.followers.all %}
+                              Unfollow
+                            {% else %}
+                              Follow
+                            {% endif %}
+                            
+                    </button>
                 {% endif %}
 
                 {% comment %} <button class="btn profile-settings-btn" aria-label="profile settings"><i
@@ -77,15 +86,25 @@
 
                 <ul>
                     <li><span class="profile-stat-count">{{user.user_posts.all|length}}</span> posts</li>
-                    <li><span class="profile-stat-count">188</span> followers</li>
-                    <li><span class="profile-stat-count">206</span> following</li>
+                    <li><span class="profile-stat-count" id="follwers-id">{{user.followers.all|length}}</span> followers</li>
+                    <li><span class="profile-stat-count" id="follwing-id">{{user.following.all|length}}</span> following</li>
                 </ul>
 
             </div>
 
             <div class="profile-bio">
 
-                <p><span class="profile-real-name">{{user.first_name}} {{user.last_name}}</span>
+                <p><span class="profile-real-name">
+                    
+                    {% if user.first_name %}
+                        {{user.first_name}}
+                    {% endif %}
+                    
+                    {% if user.last_name %}
+                        {{user.last_name}}
+                    {% endif %}
+                        
+                    </span>
                     {{user.bio}}
                 </p>
 
@@ -117,7 +136,7 @@
                         <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
                                 class="fas fa-heart" aria-hidden="true"></i> {{post.user_like.all|length}}</li>
                         <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 2</li>
+                                class="fas fa-comment" aria-hidden="true"></i> {{post.comments.all|length}}</li>
                     </ul>
 
                 </div>
@@ -174,7 +193,38 @@
                 console.log("error")
             });
         }
+    });
+
+
+    let btn_follow = document.getElementById("follow-btn-id");
+    let followers_counts = document.getElementById("follwers-id");
+
+    btn_follow.addEventListener("click", (e)=>{
+        let follow_action = btn_follow.getAttribute("data-action");
+        e.preventDefault();
+        var fd = new FormData();
+        fd.append("id", btn_follow.getAttribute("data-id"));
+        fd.append("action", btn_follow.getAttribute("data-action"));
+        fd.append("csrfmiddlewaretoken", "{{csrf_token}}");
+        axios.post("/account/follow/", fd)
+        .then((res)=>{
+            if (follow_action == "follow"){
+                btn_follow.innerText = "Unfollow";
+                btn_follow.setAttribute("data-action", "unfollow");
+                followers_counts.innerHTML = parseInt(followers_counts.innerHTML) + 1;
+            }else{
+                console.log(follow_action)
+                btn_follow.innerText = "Follow";
+                btn_follow.setAttribute("data-action", "follow");
+                followers_counts.innerHTML = parseInt(followers_counts.innerHTML) -1;
+            }
+            
+        })
+        .catch((res)=>{
+            console.log(res)
+        })
     })
+
 </script>
 
 {% endblock content %}

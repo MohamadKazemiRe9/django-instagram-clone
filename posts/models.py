@@ -11,7 +11,7 @@ class Post(models.Model):
     caption = models.TextField(blank=True)
     image = models.ImageField(upload_to="posts/images/%Y/%m/%d")
     created = models.DateTimeField(auto_now_add=True)
-    edited = models.BooleanField(default=False)
+    edited = models.BooleanField(default=False) 
     edit_time = models.DateTimeField(auto_now=True)
     slug = models.SlugField(blank=True, max_length=300)
     user_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="posts_like", blank=True)
