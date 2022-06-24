@@ -1,0 +1,272 @@
+{% load static %}
+{% include "base.html" %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock style %}
+
+{% block content %}
+<!-- header -->
+<section>
+    <div class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="{% static 'images/Instagram_logo.svg.png' %}" alt="">
+            </div>
+            <div class="serachbar">
+                <input type="search" name="" id="" placeholder="Search">
+            </div>
+            <div class="icons">
+                <div class="home"></div>
+                <i class='fas fa-home'></i>
+                <div class="send">
+                    <i class='far fa-paper-plane'></i>
+                </div>
+                <div class="add">
+                    <i class='far fa-plus-square'></i>
+                </div>
+                <div class="explore">
+                    <i class='far fa-compass'></i>
+                </div>
+                <div class="heart">
+                    <i class='far fa-heart'></i>
+                </div>
+                <div class="profile">
+                    <img src="{{user.photo.url}}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="main-container">
+    <div class="main-page">
+
+        <!-- story part -->
+        <div class="story">
+            <section class="splide" aria-labelledby="carousel-heading">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide">
+                            <img src="./images/image.jpg" alt="">
+                            <span>mister</span>
+                        </li>
+                        <li class="splide__slide">
+                            <img src="./images/image2.jpg" alt="">
+                            <span>test</span>
+                        </li>
+                        <li class="splide__slide">
+                            <img src="./images/mars.jpg" alt="">
+                            <span>test2</span>
+                        </li>
+                        <li class="splide__slide">
+                            <img src="./images/zuus.jpg" alt="">
+                            <span>mister_programmer</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- posts part -->
+        <div class="posts">
+
+            {% for post in posts %}
+              <!-- post template -->
+            <div class="post_in_main">
+                <div class="post-owner-details">
+                    <div class="post-owner-details-img">
+                        <a href="">
+                            <img src="{{post.user.photo.url}}" alt="">
+                        </a>
+                    </div>
+                    <div class="post-owner-details-profile">
+                        <div class="post-owner-details-profile-name">{{post.user}}</div>
+                        <div class="post-owner-details-profile-loaction">Isfahan</div>
+                    </div>
+                    <div></div>
+                    <div class="post-owner-details-settings">
+                        ...
+                    </div>
+                </div>
+                <div class="post-main">
+                    <img src="{{post.image.url}}" alt="">
+                </div>
+                <div class="post-actions">
+                    <div class="heart-family">
+                        <i class="far fa-heart"></i>
+                        <i class="far fa-comment"></i>
+                        <i class="far fa-paper-plane"></i>
+                    </div>
+                    <div class="bookmark-family">
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                </div>
+                <div class="post-likes">
+                    100 likes
+                </div>
+                <div class="post-caption">
+                    <a href="#" class="post-caption-username">mister_programmer_</a>
+                    <span class="post-caption-main">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit,
+                        nemo expedita nostrum libero magni ullam sint provident molestias, vel unde consequatur id
+                        harum, ipsa facere incidunt voluptates! Ex, vero eaque.
+                    </span>
+                    <a href="#" class="more-caption">
+                        more
+                    </a>
+                </div>
+                <div class="post-view-comments">
+                    <a href="#">View all 10 comments</a>
+                </div>
+                <div class="post-date">3 HOURS AGO</div>
+                <div class="post-add-comment">
+                    <div class="emoji">
+                        <a href=""><i class='far fa-smile'></i></a>
+                    </div>
+                    <div class="poast-comment-input">
+                        <input type="text" placeholder="Add a comment...">
+                    </div>
+                    <div class="post-key">
+                        <button>Post</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+
+        </div>
+    </div>
+
+    <!-- side bar -->
+    <div class="side-nav">
+        <div class="self-profile-container">
+            <div class="self-profile">
+                <div class="self-profile-image">
+                    <img src="{{user.photo.url}}" alt="">
+                </div>
+                <div class="self-profile-details">
+                    <span class="profile-details-username">
+                        <a href="#">{{user}}</a>
+                    </span>
+                    
+                    {% if user.first_name %}
+                        {{user.first_name}}
+                    {% endif %}
+                    {% if user.last_name %}
+                        {{user.last_name}}
+                    {% endif %}
+                        
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="side-nav-btn">
+                <button>Switch</button>
+            </div>
+        </div>
+
+        <div class="suggetsion">
+            <div class="suggestion-text-main">
+                <div class="suggest-text">
+                    Suggestions For You
+                </div>
+                <div class="suggest-see-all">
+                    <button>See All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- suggest friends -->
+        <div class="friend-suggest-container">
+            <div class="friend-suggest-image">
+                <img src="./images/faceless_void.jpg" alt="">
+            </div>
+            <div class="friend-suggest-info">
+                <div class="friend-suggest-info-username">
+                    Mohammadkzmr
+                </div>
+                <div class="friend-suggest-info-followed-by">
+                    Followed by mhrdad
+                </div>
+            </div>
+
+            <div class="friend-suggest-follow-btn">
+                <button>Follow</button>
+            </div>
+        </div>
+
+        <div class="friend-suggest-container">
+            <div class="friend-suggest-image">
+                <img src="./images/phantom_lancer.jpg" alt="">
+            </div>
+            <div class="friend-suggest-info">
+                <div class="friend-suggest-info-username">
+                    Mohammadkzmr
+                </div>
+                <div class="friend-suggest-info-followed-by">
+                    Followed by mhrdad
+                </div>
+            </div>
+
+            <div class="friend-suggest-follow-btn">
+                <button>Follow</button>
+            </div>
+        </div>
+
+        <div class="friend-suggest-container">
+            <div class="friend-suggest-image">
+                <img src="./images/tinker.jpg" alt="">
+            </div>
+            <div class="friend-suggest-info">
+                <div class="friend-suggest-info-username">
+                    Mohammadkzmr
+                </div>
+                <div class="friend-suggest-info-followed-by">
+                    Followed by mhrdad
+                </div>
+            </div>
+
+            <div class="friend-suggest-follow-btn">
+                <button>Follow</button>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
+<script>
+
+    var splide = new Splide('.splide', {
+        type: 'loop',
+        drag: 'free',
+        snap: true,
+        perPage: 6,
+    });
+
+    splide.mount();
+    let story_slide_list = document.getElementsByClassName("splide__slide");
+    for (index in story_slide_list) {
+        let name = story_slide_list[index].getElementsByTagName("span")[0].innerHTML;
+        if (name.length > 8) {
+            story_slide_list[index].getElementsByTagName("span")[0].innerHTML = name.slice(0, 10) + "...";
+        }
+    }
+</script>
+
+<script>
+    // caption show more
+    let caption = document.getElementsByClassName("post-caption-main");
+    for (let item in caption) {
+        let captionText = caption[item].textContent;
+        if (captionText.length > 20) {
+            caption[item].innerHTML = captionText.slice(0, 20) + "...";
+        }
+    }
+</script>
+
+<!-- ajax script -->
+<script>
+    
+</script>
+{% endblock content %}

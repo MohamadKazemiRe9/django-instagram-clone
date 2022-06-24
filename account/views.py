@@ -29,7 +29,7 @@ def user_login(request):
                 if user.is_active:
                     login(request, user)
                     messages.success(request, "You are logged in successfully!")
-                    return render(request, "account/dashboard.html", {})
+                    return redirect("profile", user)
                 else:
                     return HttpResponse("Your account is not active")
             else:
