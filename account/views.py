@@ -16,6 +16,7 @@ from posts.models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
+from actions.utils import create_action
 # Create your views here.
 
 
@@ -47,7 +48,7 @@ def dashboard(request, username):
     except:
         return render(request, "account/not_user.html", {})
     posts = Post.objects.filter(user=user).order_by("-created")
-    paginator = Paginator(posts, 6)
+    paginator = Paginator(posts, 9)
     try:
         page = request.GET.get("page")
         if page:
@@ -135,8 +136,10 @@ def user_follow(request):
             user = MyUser.objects.get(id=user_id)
             if action == "follow":
                 Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                create_action(request.user, "follow", user)
             else:
                 Contact.objects.filter(user_from=request.user, user_to=user).delete()
+                create_action(request.user, "unfollow", user)
             return JsonResponse({"status":"Ok"})
         except:
             return JsonResponse({"status":"error"})

@@ -12,6 +12,9 @@
     box-shadow: 1px 1px #aaa;
     align-items: center;
     justify-content: center;
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
 }
 
 body{
@@ -31,7 +34,7 @@ body{
     display: grid;
     grid-template-columns: 2em 2em 2em 2em 2em 2em 2em;
     align-items: center;
-    justify-content: center;
+    justify-content: center; 
     height: 100%;
     font-size: 1.3em;
 }
@@ -72,6 +75,7 @@ body{
     grid-template-columns: 30% 20%;
     column-gap: 5%;
     justify-content: center;
+    padding-top: 100px;
 }
 
 .main-page{
@@ -371,4 +375,36 @@ body{
     color: rgb(0, 106, 255);
     font-weight: 600;
     margin-top: 1em;
+}
+
+/* actions */
+.actions-container{
+    height: 400px;
+    width: 25em;
+    background-color: #fff;
+    z-index: 10;
+    position: fixed;
+    top: 3.5em;
+    right: 19em;
+    border-radius: 5px;
+    filter: drop-shadow(0px 2px 2px rgb(101, 101, 101));
+    padding: 2em;
+    /* overflow-y: auto; */
+    display: none;
+}
+
+.actions-container::after{
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    position: absolute;
+    right: 5.5em;
+    top: -10px;
+    transform: rotate(45deg);
+    position: fixed;
+}
+
+.show-box {
+    display: block;
 }

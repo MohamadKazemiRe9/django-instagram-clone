@@ -72,11 +72,11 @@
         <div class="posts">
 
             {% for post in posts %}
-              <!-- post template -->
+            <!-- post template -->
             <div class="post_in_main">
                 <div class="post-owner-details">
                     <div class="post-owner-details-img">
-                        <a href="">
+                        <a href="{% url 'profile' post.user %}">
                             <img src="{{post.user.photo.url}}" alt="">
                         </a>
                     </div>
@@ -102,24 +102,30 @@
                         <i class="far fa-bookmark"></i>
                     </div>
                 </div>
+
+                {% if cm.likes.all|length > 1 %}
                 <div class="post-likes">
-                    100 likes
+                    {{post.likes.all|length}} likes
                 </div>
+              {% else %}
+                <div class="post-likes">
+                    {{post.likes.all|length}} like
+                </div>
+              {% endif %}
+                
                 <div class="post-caption">
-                    <a href="#" class="post-caption-username">mister_programmer_</a>
-                    <span class="post-caption-main">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit,
-                        nemo expedita nostrum libero magni ullam sint provident molestias, vel unde consequatur id
-                        harum, ipsa facere incidunt voluptates! Ex, vero eaque.
-                    </span>
-                    <a href="#" class="more-caption">
-                        more
-                    </a>
+                    <a href="#" class="post-caption-username">{{post.user}}</a>
+                    <span class="post-caption-main">{{post.caption}}</span>
+                    <a href="#" class="more-caption">more</a>
                 </div>
                 <div class="post-view-comments">
-                    <a href="#">View all 10 comments</a>
+                    {% if post.comments.all|length > 0 %}
+                    <a href="#">View all {{post.comments.all|length}} comments</a>
+                    {% endif %}
+
                 </div>
-                <div class="post-date">3 HOURS AGO</div>
-                <div class="post-add-comment">
+                <div class="post-date">{{cm.created|timesince}}</div>
+                <div class="post-add-comment"> 
                     <div class="emoji">
                         <a href=""><i class='far fa-smile'></i></a>
                     </div>
@@ -132,7 +138,7 @@
                 </div>
             </div>
             {% endfor %}
-            
+
 
         </div>
     </div>
@@ -148,14 +154,14 @@
                     <span class="profile-details-username">
                         <a href="#">{{user}}</a>
                     </span>
-                    
+
                     {% if user.first_name %}
-                        {{user.first_name}}
+                    {{user.first_name}}
                     {% endif %}
                     {% if user.last_name %}
-                        {{user.last_name}}
+                    {{user.last_name}}
                     {% endif %}
-                        
+
                 </div>
             </div>
             <!-- buttons -->
@@ -229,9 +235,12 @@
                 <button>Follow</button>
             </div>
         </div>
-        
+
     </div>
 
+    <div class="actions-container animate__animated animate__fadeIn">
+            
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
@@ -257,16 +266,82 @@
 <script>
     // caption show more
     let caption = document.getElementsByClassName("post-caption-main");
+    let more = document.getElementsByClassName("more-caption");
     for (let item in caption) {
-        let captionText = caption[item].textContent;
-        if (captionText.length > 20) {
-            caption[item].innerHTML = captionText.slice(0, 20) + "...";
+        let captionText = (caption[item].innerText).trim();
+        if (captionText.trim().length > 10) {
+            caption[item].innerHTML = captionText.slice(0, 10) + "...";
+        } else {
+            more[item].remove();
+            console.log(more.innerText)
         }
     }
 </script>
 
 <!-- ajax script -->
 <script>
+    let page = 1;
+    let emptyPage = false;
+    let blockRequest = false;
+    let posts_container = document.getElementsByClassName("posts")[0];
+
+    document.addEventListener("scroll", function () {
+        let contentHeight = window.innerHeight;
+        let yOffset = window.pageYOffset;
+        let clientHight = document.body.clientHeight;
+
+        if (yOffset > (clientHight * 6) / 10 && emptyPage == false && blockRequest == false) {
+            blockRequest = true;
+            page += 1;
+            axios.get("", {
+                params: {
+                    page: page,
+                }
+            }).then((result) => {
+                if (result.data.status === "empty") {
+                    emptyPage = true;
+                    console.log("empty")
+                }
+                posts_container.innerHTML += result.data.status;
+                // caption show more
+                try {
+                    let caption = document.getElementsByClassName("post-caption-main");
+                    let more = document.getElementsByClassName("more-caption");
+                    for (let item in caption) {
+                        let captionText = (caption[item].innerText).trim();
+                        if (captionText.trim().length > 10) {
+                            caption[item].innerHTML = captionText.slice(0, 10) + "...";
+                        } else {
+                            more[item].remove();
+                            console.log(more.innerText)
+                        }
+                    }
+                }
+                catch {
+
+                }
+                blockRequest = false;
+            }).catch((err) => {
+                console.log(err)
+            });
+        }
+    });
+</script>
+
+<!-- actions -->
+<script>
+    // actions show
+    let heartKey = document.getElementsByClassName("heart")[0];
+    let actionsContainer = document.getElementsByClassName("actions-container")[0];
+
+    document.addEventListener("click", (e)=>{
+        if (!e.target.classList.contains("fa-heart") && actionsContainer.classList.contains("show-box")){
+            actionsContainer.classList.remove("show-box");
+        }
+    });
+    heartKey.addEventListener("click", ()=>{
+        actionsContainer.classList.toggle("show-box");
+    });
     
 </script>
 {% endblock content %}

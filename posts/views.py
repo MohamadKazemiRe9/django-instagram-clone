@@ -6,6 +6,7 @@ from .models import Post, PostComment
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from actions.utils import create_action
 
 
 # Create your views here.
@@ -19,6 +20,7 @@ def post_create(request):
             new_obj = form.save(commit=False)
             new_obj.user = request.user
             new_obj.save()
+            create_action(request.user, "posted", new_obj)
             return redirect("profile", request.user)
     else:
         form = PostCreateForm()
@@ -74,8 +76,10 @@ def post_like(request):
             post = Post.objects.get(id=post_id)
             if action == "like":
                 post.user_like.add(request.user)
+                create_action(request.user, "likes", post)
             else:
                 post.user_like.remove(request.user)
+                create_action(request.user, "dislikes", post)
             return JsonResponse({'status':"ok"})
         except:
             pass

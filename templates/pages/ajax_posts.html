@@ -1,0 +1,75 @@
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock style %}
+
+{% block content %}
+{% for post in posts %}
+            <!-- post template -->
+            <div class="post_in_main">
+                <div class="post-owner-details">
+                    <div class="post-owner-details-img">
+                        <a href="{% url 'profile' post.user %}">
+                            <img src="{{post.user.photo.url}}" alt="">
+                        </a>
+                    </div>
+                    <div class="post-owner-details-profile">
+                        <div class="post-owner-details-profile-name">{{post.user}}</div>
+                        <div class="post-owner-details-profile-loaction">Isfahan</div>
+                    </div>
+                    <div></div>
+                    <div class="post-owner-details-settings">
+                        ...
+                    </div>
+                </div>
+                <div class="post-main">
+                    <img src="{{post.image.url}}" alt="">
+                </div>
+                <div class="post-actions">
+                    <div class="heart-family">
+                        <i class="far fa-heart"></i>
+                        <i class="far fa-comment"></i>
+                        <i class="far fa-paper-plane"></i>
+                    </div>
+                    <div class="bookmark-family">
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                </div>
+
+                {% if cm.likes.all|length > 1 %}
+                <div class="post-likes">
+                    {{post.likes.all|length}} likes
+                </div>
+              {% else %}
+                <div class="post-likes">
+                    {{post.likes.all|length}} like
+                </div>
+              {% endif %}
+                
+                <div class="post-caption">
+                    <a href="#" class="post-caption-username">{{post.user}}</a>
+                    <span class="post-caption-main">{{post.caption}}</span>
+                    <a href="#" class="more-caption">more</a>
+                </div>
+                <div class="post-view-comments">
+                    {% if post.comments.all|length > 0 %}
+                    <a href="#">View all {{post.comments.all|length}} comments</a>
+                    {% endif %}
+
+                </div>
+                <div class="post-date">{{cm.created|timesince}}</div>
+                <div class="post-add-comment"> 
+                    <div class="emoji">
+                        <a href=""><i class='far fa-smile'></i></a>
+                    </div>
+                    <div class="poast-comment-input">
+                        <input type="text" placeholder="Add a comment...">
+                    </div>
+                    <div class="post-key">
+                        <button>Post</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+{% endblock content %}
