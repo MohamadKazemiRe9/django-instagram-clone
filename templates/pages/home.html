@@ -18,7 +18,7 @@
             </div>
             <div class="icons">
                 <div class="home"></div>
-                <i class='fas fa-home'></i>
+                    <i class='fas fa-home'></i>
                 <div class="send">
                     <i class='far fa-paper-plane'></i>
                 </div>
@@ -31,9 +31,9 @@
                 <div class="heart">
                     <i class='far fa-heart'></i>
                 </div>
-                <div class="profile">
+                <a href="{% url 'profile' user %}" class="profile">
                     <img src="{{user.photo.url}}" alt="">
-                </div>
+                </a>
             </div>
         </div>
     </div>
@@ -83,9 +83,9 @@
                         ...
                     </div>
                 </div>
-                <div class="post-main">
+                <a href="{{post.get_absolute_url}}" class="post-main">
                     <img src="{{post.image.url}}" alt="">
-                </div>
+                </a>
                 <div class="post-actions">
                     <div class="heart-family">
                         <i class="far fa-heart"></i>
@@ -234,18 +234,39 @@
 
     <div class="actions-container animate__animated">
         {% for action in actions %}
-            <a href="{% url 'profile' action.user %}">
-                <div class="action-user-image">
+        <div class="action">
+            <div class="action-user-image">
+                <a href="{% url 'profile' action.user %}">
                     <img src="{{action.user.photo.url}}" alt="">
-                </div>
-            </a>
-            {{action.act}}
-            
-            {% if action.target %}
-                {{action.target}}
-            {% endif %}
+                </a>
+            </div>
+            <div class="action-act">
                 
+                {% if action.act %}
+                    {{action.act}}
+                {% endif %}
+                    
+            </div>
+            <div class="action-target">
+                {% if action.act == "follow" or action.act == "unfollow" %}
+                <a href="{% url 'profile' action.target %}">
+                    <img src="{{action.target.photo.url}}" alt="">
+                </a>
+                {% elif action.act == "likes" or  action.act == "posted" %}
+                <a href="{{action.target.get_absolute_url}}">
+                    <img src="{{action.target.image.url}}" alt="">
+                </a>
+                {% endif %}
+                
+            </div>
+            <div class="action-date">
+                {{action.created|timesince}} ago
+            </div>
+        </div>
         {% endfor %}
+    </div>
+                
+        
     </div>
 </div>
 
@@ -341,7 +362,7 @@
     let actionsContainer = document.getElementsByClassName("actions-container")[0];
 
     document.addEventListener("click", (e)=>{
-        if (!e.target.classList.contains("fa-heart") && actionsContainer.classList.contains("show-box")){
+        if (!e.target.classList.contains("fa-heart") && !e.target.classList.contains("actions-container") && actionsContainer.classList.contains("show-box")){
             actionsContainer.classList.remove("show-box");
         }
     });

@@ -416,6 +416,25 @@ body{
     position: fixed;
 }
 
+.action{
+    display: grid;
+    grid-template-columns: 20% 20% 20% 40%;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-user-image > a > img,
+.action-target > a > img {
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+}
+
+.action-date{
+    color: #777;
+    font-size: 0.8em;
+}
+
 .show-box {
     display: block;
 }
