@@ -82,6 +82,8 @@ body{
     margin-left: 2em;
 }
 
+/* story part */
+
 .story{
     height: 6em;
     background-color: #fff;
@@ -98,6 +100,11 @@ body{
 .splide__slide{
     display: grid;
     justify-content: center;
+}
+
+.splide__list > a{
+    text-decoration: none;
+    color: inherit;
 }
 
 .splide__slide > span{
@@ -275,6 +282,7 @@ body{
     right: 0;
     margin-right: 20em ;
     grid-template-rows: auto auto auto;
+    width: 20em;
     /* background-color: #333; */
 }
 
@@ -289,7 +297,6 @@ body{
 }
 
 .self-profile-details{
-    margin-left: -1em;
     margin-top: 1em;
 }
 
@@ -306,11 +313,14 @@ body{
 
 .profile-details-username{
     font-weight: 600;
+    margin-left: 1em;
 }
 
 .profile-details-username > a{
     text-decoration: none;
     color: #333;
+    display: inline-block;
+    width: 100%;
 }
 
 .side-nav-btn{
@@ -323,6 +333,7 @@ body{
     color: rgb(0, 106, 255);
     font-weight: 600;
     cursor: pointer;
+    float: right;
 }
 
 /* suggest friends */
@@ -389,7 +400,7 @@ body{
     border-radius: 5px;
     filter: drop-shadow(0px 2px 2px rgb(101, 101, 101));
     padding: 2em;
-    /* overflow-y: auto; */
+    overflow-y: auto;
     display: none;
 }
 

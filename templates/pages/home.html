@@ -47,22 +47,16 @@
             <section class="splide" aria-labelledby="carousel-heading">
                 <div class="splide__track">
                     <ul class="splide__list">
-                        <li class="splide__slide">
-                            <img src="./images/image.jpg" alt="">
-                            <span>mister</span>
-                        </li>
-                        <li class="splide__slide">
-                            <img src="./images/image2.jpg" alt="">
-                            <span>test</span>
-                        </li>
-                        <li class="splide__slide">
-                            <img src="./images/mars.jpg" alt="">
-                            <span>test2</span>
-                        </li>
-                        <li class="splide__slide">
-                            <img src="./images/zuus.jpg" alt="">
-                            <span>mister_programmer</span>
-                        </li>
+
+                        {% for follow in request.user.following.all %}
+                        <a href="">
+                            <li class="splide__slide">
+                                <img src="{{follow.photo.url}}" alt="">
+                                <span>{{follow}}</span>
+                            </li>
+                        </a>
+                        {% endfor %}
+                    
                     </ul>
                 </div>
             </section>
@@ -238,8 +232,20 @@
 
     </div>
 
-    <div class="actions-container animate__animated animate__fadeIn">
+    <div class="actions-container animate__animated">
+        {% for action in actions %}
+            <a href="{% url 'profile' action.user %}">
+                <div class="action-user-image">
+                    <img src="{{action.user.photo.url}}" alt="">
+                </div>
+            </a>
+            {{action.act}}
             
+            {% if action.target %}
+                {{action.target}}
+            {% endif %}
+                
+        {% endfor %}
     </div>
 </div>
 
@@ -247,7 +253,7 @@
 <script>
 
     var splide = new Splide('.splide', {
-        type: 'loop',
+        // type: 'loop',
         drag: 'free',
         snap: true,
         perPage: 6,

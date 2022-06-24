@@ -4,18 +4,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from actions.models import Action
 # Create your views here.
 
 def home(request):
     user = request.user
-    my_posts = Post.objects.filter(user=user).order_by("-created")
-    posts = Post.objects.none()
+    posts = Post.objects.filter(user=user).order_by("-created")
     if user.following.all():
         for friend in user.following.all():
             friends_posts = Post.objects.filter(user=friend)
-            posts = (my_posts | friends_posts)
-    else:
-        posts = my_posts
+            posts |= friends_posts
 
     paginator = Paginator(posts, 6)
     try:
@@ -33,4 +31,8 @@ def home(request):
         posts = paginator.page(1)
     except EmptyPage:
         return JsonResponse({"status":"empty"})
-    return render(request, "pages/home.html", {"posts":posts})
+    actions = Action.objects.exclude(user=user).order_by("-created")
+    following_ids = user.following.values_list("id", flat=True)
+    if following_ids:
+        actions = actions.filter(user_id__in=following_ids)[:10]
+    return render(request, "pages/home.html", {"posts":posts, "actions":actions})

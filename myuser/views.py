@@ -10,7 +10,7 @@ def edit(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully")
-            return redirect("profile")
+            return redirect("profile", request.user)
         else:
             messages.error(request, "Error updating your profile")
     else:
