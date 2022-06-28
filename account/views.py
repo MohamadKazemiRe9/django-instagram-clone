@@ -35,7 +35,8 @@ def user_login(request):
                     else:
                         return HttpResponse("Your account is not active")
                 else:
-                    return HttpResponse("Invalid login")
+                    messages.error(request, "Username or password is not correct!")
+                    return redirect("login")
         else:
             form = LoginForm()
         return render(request, 'registration/login.html', {'form':form})

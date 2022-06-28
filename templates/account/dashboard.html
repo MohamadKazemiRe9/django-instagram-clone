@@ -12,22 +12,22 @@
 
     <div class="container" id="container-id">
 
-
+        <!-- messages -->
         {% if messages %}
-        {% for message in messages %}
-        {% if message.tags %}
-        {% if message.tags == "success" %}
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Swal.fire(
-                '{{message}}',
-                "",
-                '{{message.tags}}'
-            )
-        </script>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
+            {% for message in messages %}
+                {% if message.tags %}
+                    {% if message.tags == "success" %}
+                    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    <script>
+                        Swal.fire(
+                            '{{message}}',
+                            "",
+                            '{{message.tags}}'
+                        )
+                    </script>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
 
 

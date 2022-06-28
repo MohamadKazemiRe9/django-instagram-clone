@@ -3,9 +3,9 @@ from myuser.models import MyUser
 from posts.models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
-
 from django.http import JsonResponse
 from actions.models import Action
+from django.db.models import Count
 # Create your views here.
 
 def home(request):
@@ -43,3 +43,8 @@ def home(request):
                 suggest_list |= suggest_user
     suggest_list = suggest_list[:5]
     return render(request, "pages/home.html", {"posts":posts, "actions":actions, "suggests":suggest_list})
+
+
+def explore(request):
+    posts = Post.objects.annotate(total_likes=Count("user_like")).order_by('-total_likes')
+    return render(request, "pages/explore.html", {"posts":posts})

@@ -73,10 +73,11 @@ body{
 
 .main-container{
     display: grid;
-    grid-template-columns: 30% 20%;
+    grid-template-columns: 40% 30%;
     column-gap: 5%;
     justify-content: center;
     padding-top: 100px;
+    padding: 100px 10% ;
 }
 
 .main-page{
@@ -131,7 +132,7 @@ body{
     grid-template-rows: auto 60% auto auto auto auto auto auto;
     overflow: auto;
     margin-bottom: 1em;
-    height: 40em;
+    height: 50em;
 }
 
 .post-owner-details{
