@@ -46,5 +46,6 @@ def home(request):
 
 
 def explore(request):
-    posts = Post.objects.annotate(total_likes=Count("user_like")).order_by('-total_likes')
+    # posts = Post.objects.annotate(total_likes=Count("user_like")).order_by('-total_likes')
+    posts = Post.objects.order_by("-total_likes")
     return render(request, "pages/explore.html", {"posts":posts})

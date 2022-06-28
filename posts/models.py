@@ -15,6 +15,7 @@ class Post(models.Model):
     edit_time = models.DateTimeField(auto_now=True)
     slug = models.SlugField(blank=True, max_length=300)
     user_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="posts_like", blank=True)
+    total_likes = models.PositiveIntegerField(default=0)
 
     def __str__(self): 
         return str(self.user)+" "+str(datetime.now())
@@ -26,7 +27,9 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("posts:detail", kwargs={"id": self.id, "slug":self.slug})
-    
+
+
+
 class PostComment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="user_comments", on_delete=models.CASCADE)
