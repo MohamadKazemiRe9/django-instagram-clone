@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from random import randint
 from . import info
-import requests
+import requests 
 import datetime, time
 from myuser.models import MyUser, Contact
 from posts.forms import PostCreateForm
@@ -21,23 +21,26 @@ from actions.utils import create_action
 
 
 def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(request, username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    messages.success(request, "You are logged in successfully!")
-                    return redirect("profile", user)
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                user = authenticate(request, username=cd['username'], password=cd['password'])
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        messages.success(request, "You are logged in successfully!")
+                        return redirect("pages:home")
+                    else:
+                        return HttpResponse("Your account is not active")
                 else:
-                    return HttpResponse("Your account is not active")
-            else:
-                return HttpResponse("Invalid login")
+                    return HttpResponse("Invalid login")
+        else:
+            form = LoginForm()
+        return render(request, 'registration/login.html', {'form':form})
     else:
-        form = LoginForm()
-    return render(request, 'registration/login.html', {'form':form})
+        return redirect("pages:home")
 
 
 @login_required

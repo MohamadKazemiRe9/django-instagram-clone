@@ -439,3 +439,80 @@ body{
 .show-box {
     display: block;
 }
+
+/* profile modal */
+.profile-modal-container{
+    height: 200px;
+    width: 200px;
+    background-color: #fff;
+    position: fixed;
+    top: 3.5em;
+    right: 16em;
+    filter: drop-shadow(0px 2px 2px rgb(101, 101, 101));
+    display: grid;
+    align-items: center;
+    border-radius: 5px;
+    z-index: 3000;
+}
+.profile-modal-container::before{
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    position: absolute;
+    right: 6em;
+    top: -10px;
+    transform: rotate(45deg);
+    position: fixed;
+}
+
+
+/* profile modal */
+.profile-modal-container{
+    height: 200px;
+    width: 200px;
+    background-color: #fff;
+    position: fixed;
+    top: 3.5em;
+    right: 18em;
+    filter: drop-shadow(0px 2px 2px rgb(101, 101, 101));
+    display: grid;
+    align-items: center;
+    border-radius: 5px;
+    z-index: 10000;
+}
+.profile-modal-container::before{
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    position: absolute;
+    right: 4em;
+    top: -10px;
+    transform: rotate(45deg);
+    position: fixed;
+}
+
+.display-none{
+    display: none;
+}
+.profile-item{
+    display: grid;
+    grid-template-columns: 15% auto;
+    padding-left: 1em;
+    height: 100%;
+    width: calc(100%-1em);
+    align-items: center;
+    z-index: 3200;
+    text-decoration: none;
+    color: #333;
+}
+
+.profile-item:hover{
+    background-color: rgb(242, 251, 255);
+    cursor: pointer;
+}
+
+.profile-item:last-child{
+    border-top: 1px solid #afafaf;
+}

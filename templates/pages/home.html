@@ -31,10 +31,9 @@
                 <div class="heart">
                     <i class='far fa-heart'></i>
                 </div>
-                <a href="{% url 'profile' user %}" class="profile">
-                    <img src="{{user.photo.url}}" alt="">
-                </a>
-            </div>
+                <div class="profile profile-box">
+                    <img class="profile-box" src="{{user.photo.url}}" alt="">
+                </div>
         </div>
     </div>
 </section>
@@ -242,6 +241,37 @@
     </div>
 </div>
 
+
+<!-- profile modal -->
+    <!-- note : 
+    برای همه ی المان های داخل باکس یک کلاس تکراری قرار میدم تا با کلیک کردن روی آیتمی که این کلاس رو داده باکس بسته نشه 
+    profile-box -->
+    <div class="profile-modal-container profile-box display-none">
+        <a href="{% url 'profile' user %}" class="profile-box profile-link profile-item">
+            <i class="far fa-user-circle"></i>
+            <span>Profile</span>
+        </a>
+        <a href=""  class="profile-box profile-saves profile-item">
+            <i class="far fa-bookmark"></i>
+            <span>Saved</span>
+        </a>
+        <a href=""  class="profile-box profile-settings profile-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <a href=""  class="profile-box profile-switch-accounts profile-item">
+            <!-- <i class="fas fa-repeat-alt"></i> -->
+            <i class="fas fa-random"></i>
+            <span>Switch Accounts</span>
+        </a>
+        <a href="{% url 'logout' %}" class="profile-box logoutbox profile-item">
+            <span></span>
+            <div>Log Out</div>
+        </a>
+    </div>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
 <script>
 
@@ -342,5 +372,20 @@
         actionsContainer.classList.toggle("show-box");
     });
     
+</script>
+
+<script>
+    // modal profile box
+    let modalProfile = document.getElementsByClassName("profile-modal-container")[0];
+    let profile = document.getElementsByClassName("profile")[0];
+
+    profile.addEventListener("click", () => {
+        modalProfile.classList.toggle("display-none");
+    });
+    document.addEventListener("click", e => {
+        if (!e.target.classList.contains("profile-box")){
+            modalProfile.classList.add("display-none");
+        }
+    })
 </script>
 {% endblock content %}
