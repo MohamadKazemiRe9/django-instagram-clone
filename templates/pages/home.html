@@ -49,7 +49,7 @@
                     <ul class="splide__list">
 
                         {% for follow in request.user.following.all %}
-                        <a href="">
+                        <a href="{% url 'profile' follow %}">
                             <li class="splide__slide">
                                 <img src="{{follow.photo.url}}" alt="">
                                 <span>{{follow}}</span>
@@ -176,16 +176,22 @@
         </div>
 
         <!-- suggest friends -->
+        {% for suggest in suggests %}
         <div class="friend-suggest-container">
             <div class="friend-suggest-image">
-                <img src="./images/faceless_void.jpg" alt="">
+                <img src="{{suggest.photo.url}}" alt="">
             </div>
             <div class="friend-suggest-info">
                 <div class="friend-suggest-info-username">
-                    Mohammadkzmr
+                    {{suggest}}
                 </div>
                 <div class="friend-suggest-info-followed-by">
-                    Followed by mhrdad
+                    Followed by 
+                    {% for account in suggest.followers.all %}
+                        {% if account in user.following.all %}
+                            {{account}}
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
@@ -193,42 +199,8 @@
                 <button>Follow</button>
             </div>
         </div>
-
-        <div class="friend-suggest-container">
-            <div class="friend-suggest-image">
-                <img src="./images/phantom_lancer.jpg" alt="">
-            </div>
-            <div class="friend-suggest-info">
-                <div class="friend-suggest-info-username">
-                    Mohammadkzmr
-                </div>
-                <div class="friend-suggest-info-followed-by">
-                    Followed by mhrdad
-                </div>
-            </div>
-
-            <div class="friend-suggest-follow-btn">
-                <button>Follow</button>
-            </div>
-        </div>
-
-        <div class="friend-suggest-container">
-            <div class="friend-suggest-image">
-                <img src="./images/tinker.jpg" alt="">
-            </div>
-            <div class="friend-suggest-info">
-                <div class="friend-suggest-info-username">
-                    Mohammadkzmr
-                </div>
-                <div class="friend-suggest-info-followed-by">
-                    Followed by mhrdad
-                </div>
-            </div>
-
-            <div class="friend-suggest-follow-btn">
-                <button>Follow</button>
-            </div>
-        </div>
+        {% endfor %}
+        
 
     </div>
 

@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from myuser.models import MyUser
 from posts.models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
-from django.views.decorators.http import require_POST
+
 from django.http import JsonResponse
 from actions.models import Action
 # Create your views here.
@@ -19,9 +20,7 @@ def home(request):
     try:
         page = request.GET.get("page")
         if page:
-            print(page)
             posts = paginator.page(page)
-            print(posts)
             return JsonResponse({
                 "status":render_to_string("pages/ajax_posts.html", {"posts":posts}, request=request)
             })
@@ -35,4 +34,12 @@ def home(request):
     following_ids = user.following.values_list("id", flat=True)
     if following_ids:
         actions = actions.filter(user_id__in=following_ids)[:10]
-    return render(request, "pages/home.html", {"posts":posts, "actions":actions})
+    user_followings = MyUser.objects.filter(id__in=following_ids)
+    suggest_list = MyUser.objects.none()
+    for follow in user_followings.all():
+        for suggest_user in follow.following.all():
+            if not suggest_user.id in following_ids and suggest_user != user:
+                suggest_user = MyUser.objects.filter(id=suggest_user.id)
+                suggest_list |= suggest_user
+    suggest_list = suggest_list[:5]
+    return render(request, "pages/home.html", {"posts":posts, "actions":actions, "suggests":suggest_list})
