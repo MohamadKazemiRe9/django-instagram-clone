@@ -12,7 +12,7 @@
 
     <div class="container" id="container-id">
 
-        <!-- messages -->
+        <!-- messages
         {% if messages %}
             {% for message in messages %}
                 {% if message.tags %}
@@ -28,7 +28,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-        {% endif %}
+        {% endif %} -->
 
 
         <div class="profile">
@@ -86,8 +86,8 @@
 
                 <ul>
                     <li><span class="profile-stat-count">{{user.user_posts.all|length}}</span> posts</li>
-                    <li><span class="profile-stat-count" id="follwers-id">{{user.followers.all|length}}</span> followers</li>
-                    <li><span class="profile-stat-count" id="follwing-id">{{user.following.all|length}}</span> following</li>
+                    <li data-bs-toggle="modal" data-bs-target="#followers"><span class="profile-stat-count" id="follwers-id">{{user.followers.all|length}}</span> followers</li>
+                    <li data-bs-toggle="modal" data-bs-target="#followings"><span class="profile-stat-count" id="follwing-id">{{user.following.all|length}}</span> following</li>
                 </ul>
 
             </div>
@@ -168,7 +168,8 @@
         let clientHight = document.body.clientHeight;
         let galleryItems = document.getElementsByClassName("gallery-item");
 
-        if (contentHeight + yOffset > clientHight + 10 && emptyPage == false && blockRequest == false) {
+        if (contentHeight + yOffset > clientHight * 0.9 && emptyPage == false && blockRequest == false) {
+            console.log("ajax")
             blockRequest = true;
             page += 1;
             axios.get("", {
@@ -227,4 +228,61 @@
 
 </script>
 
+
+<!-- modal show followers -->
+  <!-- Modal -->
+  <div class="modal fade" id="followers" tabindex="-1" aria-labelledby="followersLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="followersLabel">Followers</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% for follower in user.followers.all %}
+            <div class="row">
+                <div class="col mb-3">
+                    <a href="{% url 'profile' follower %}" class="modal-item-info">
+                        <img src="{{follower.photo.url}}" alt="">
+                        {{follower}}
+                    </a>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- modal show followings -->
+  <!-- Modal -->
+  <div class="modal fade" id="followings" tabindex="-1" aria-labelledby="followingsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="followingsLabel">Followings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% for following in user.following.all %}
+            <div class="row">
+                <div class="col mb-3">
+                    <a href="{% url 'profile' following %}" class="modal-item-info">
+                        <img src="{{following.photo.url}}" alt="">
+                        {{following}}
+                    </a>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}

@@ -142,6 +142,11 @@ img {
     padding-bottom: 3rem;
 }
 
+.gallery > a{
+    text-decoration: none;
+    color: #fff;
+}
+
 .gallery-item {
     position: relative;
     flex: 1 0 22rem;
@@ -373,4 +378,19 @@ img {
     border-radius: 0.2em;
     margin-left: 1em;
     cursor: pointer;
+}
+
+/* modals */
+.modal-item-info{
+    text-decoration: none;
+    color: inherit;
+}
+.modal-item-info:hover{
+    color: inherit;
+}
+.modal-item-info > img{
+    background-color: red;
+    height: 4em;
+    width: 4em;
+    border-radius: 50%;
 }

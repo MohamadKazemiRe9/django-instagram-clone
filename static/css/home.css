@@ -1,5 +1,6 @@
 .header{
     background-color: #fff;
+    padding-bottom: 3em;
 } 
 
 .header-container{
@@ -16,6 +17,12 @@
     width: 100%;
     background-color: #fff;
     z-index: 100;
+    color: #333;
+}
+
+.icons > a{
+    text-decoration: none;
+    color: inherit;
 }
 
 body{
@@ -76,9 +83,10 @@ body{
     grid-template-columns: 40% 30%;
     column-gap: 5%;
     justify-content: center;
-    padding-top: 100px;
-    padding: 100px 10% ;
+    padding: 1em 10% ;
 }
+
+
 
 .main-page{
     margin-left: 2em;
@@ -98,6 +106,13 @@ body{
     justify-content: center;
 }
 
+.story-username{
+    font-size: 0.75em;
+}
+
+.splide{
+    padding: 0 1em;
+}
 
 .splide__slide{
     display: grid;
@@ -133,6 +148,7 @@ body{
     overflow: auto;
     margin-bottom: 1em;
     height: 50em;
+    color: #373737;
 }
 
 .post-owner-details{
@@ -366,10 +382,19 @@ body{
     grid-template-columns: 12% 60% auto;
 }
 
+.friend-suggest-container > a{
+    text-decoration: none;
+    color: inherit;
+}
+
 .friend-suggest-image > img{
     width: 2em;
     height: 2em;
     border-radius: 50%;
+}
+.friend-suggest-info > a{
+    text-decoration: none;
+    color: inherit;
 }
 
 .friend-suggest-info-username{
@@ -427,8 +452,8 @@ body{
 
 .action-user-image > a > img,
 .action-target > a > img {
-    width: 3em;
-    height: 3em;
+    width: 2em;
+    height: 2em;
     border-radius: 50%;
 }
 
@@ -512,6 +537,7 @@ body{
 .profile-item:hover{
     background-color: rgb(242, 251, 255);
     cursor: pointer;
+    color: inherit;
 }
 
 .profile-item:last-child{

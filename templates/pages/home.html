@@ -6,37 +6,6 @@
 {% endblock style %}
 
 {% block content %}
-<!-- header -->
-<section>
-    <div class="header">
-        <div class="header-container">
-            <div class="logo">
-                <img src="{% static 'images/Instagram_logo.svg.png' %}" alt="">
-            </div>
-            <div class="serachbar">
-                <input type="search" name="" id="" placeholder="Search">
-            </div>
-            <div class="icons">
-                <div class="home"></div>
-                    <i class='fas fa-home'></i>
-                <div class="send">
-                    <i class='far fa-paper-plane'></i>
-                </div>
-                <div class="add">
-                    <i class='far fa-plus-square'></i>
-                </div>
-                <div class="explore">
-                    <i class='far fa-compass'></i>
-                </div>
-                <div class="heart">
-                    <i class='far fa-heart'></i>
-                </div>
-                <div class="profile profile-box">
-                    <img class="profile-box" src="{{user.photo.url}}" alt="">
-                </div>
-        </div>
-    </div>
-</section>
 
 <div class="main-container">
     <div class="main-page">
@@ -51,7 +20,7 @@
                         <a href="{% url 'profile' follow %}">
                             <li class="splide__slide">
                                 <img src="{{follow.photo.url}}" alt="">
-                                <span>{{follow}}</span>
+                                <span class="story-username">{{follow|truncatechars:7}}</span>
                             </li>
                         </a>
                         {% endfor %}
@@ -177,13 +146,13 @@
         <!-- suggest friends -->
         {% for suggest in suggests %}
         <div class="friend-suggest-container">
-            <div class="friend-suggest-image">
+            <a href="{% url 'profile' suggest %}" class="friend-suggest-image">
                 <img src="{{suggest.photo.url}}" alt="">
-            </div>
+            </a>
             <div class="friend-suggest-info">
-                <div class="friend-suggest-info-username">
+                <a href="{% url 'profile' suggest %}" class="friend-suggest-info-username">
                     {{suggest}}
-                </div>
+                </a>
                 <div class="friend-suggest-info-followed-by">
                     Followed by 
                     {% for account in suggest.followers.all %}
@@ -203,78 +172,12 @@
 
     </div>
 
-    <div class="actions-container animate__animated">
-        {% for action in actions %}
-        <div class="action">
-            <div class="action-user-image">
-                <a href="{% url 'profile' action.user %}">
-                    <img src="{{action.user.photo.url}}" alt="">
-                </a>
-            </div>
-            <div class="action-act">
-                
-                {% if action.act %}
-                    {{action.act}}
-                {% endif %}
-                    
-            </div>
-            <div class="action-target">
-                {% if action.act == "follow" or action.act == "unfollow" %}
-                <a href="{% url 'profile' action.target %}">
-                    <img src="{{action.target.photo.url}}" alt="">
-                </a>
-                {% elif action.act == "likes" or  action.act == "posted" %}
-                <a href="{{action.target.get_absolute_url}}">
-                    <img src="{{action.target.image.url}}" alt="">
-                </a>
-                {% endif %}
-                
-            </div>
-            <div class="action-date">
-                {{action.created|timesince}} ago
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-                
-        
-    </div>
-</div>
-
-
-<!-- profile modal -->
-    <!-- note : 
-    برای همه ی المان های داخل باکس یک کلاس تکراری قرار میدم تا با کلیک کردن روی آیتمی که این کلاس رو داده باکس بسته نشه 
-    profile-box -->
-    <div class="profile-modal-container profile-box display-none">
-        <a href="{% url 'profile' user %}" class="profile-box profile-link profile-item">
-            <i class="far fa-user-circle"></i>
-            <span>Profile</span>
-        </a>
-        <a href=""  class="profile-box profile-saves profile-item">
-            <i class="far fa-bookmark"></i>
-            <span>Saved</span>
-        </a>
-        <a href=""  class="profile-box profile-settings profile-item">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </a>
-        <a href=""  class="profile-box profile-switch-accounts profile-item">
-            <!-- <i class="fas fa-repeat-alt"></i> -->
-            <i class="fas fa-random"></i>
-            <span>Switch Accounts</span>
-        </a>
-        <a href="{% url 'logout' %}" class="profile-box logoutbox profile-item">
-            <span></span>
-            <div>Log Out</div> 
-        </a>
-    </div>
+    
 
 
 
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/js/splide.min.js"></script>
 <script>
-
     var splide = new Splide('.splide', {
         // type: 'loop',
         drag: 'free',
@@ -283,13 +186,6 @@
     });
 
     splide.mount();
-    let story_slide_list = document.getElementsByClassName("splide__slide");
-    for (index in story_slide_list) {
-        let name = story_slide_list[index].getElementsByTagName("span")[0].innerHTML;
-        if (name.length > 8) {
-            story_slide_list[index].getElementsByTagName("span")[0].innerHTML = name.slice(0, 10) + "...";
-        }
-    }
 </script>
 
 <script>
@@ -357,35 +253,5 @@
     });
 </script>
 
-<!-- actions -->
-<script>
-    // actions show
-    let heartKey = document.getElementsByClassName("heart")[0];
-    let actionsContainer = document.getElementsByClassName("actions-container")[0];
 
-    document.addEventListener("click", (e)=>{
-        if (!e.target.classList.contains("fa-heart") && !e.target.classList.contains("actions-container") && actionsContainer.classList.contains("show-box")){
-            actionsContainer.classList.remove("show-box");
-        }
-    });
-    heartKey.addEventListener("click", ()=>{
-        actionsContainer.classList.toggle("show-box");
-    });
-    
-</script>
-
-<script>
-    // modal profile box
-    let modalProfile = document.getElementsByClassName("profile-modal-container")[0];
-    let profile = document.getElementsByClassName("profile")[0];
-
-    profile.addEventListener("click", () => {
-        modalProfile.classList.toggle("display-none");
-    });
-    document.addEventListener("click", e => {
-        if (!e.target.classList.contains("profile-box")){
-            modalProfile.classList.add("display-none");
-        }
-    })
-</script>
 {% endblock content %}

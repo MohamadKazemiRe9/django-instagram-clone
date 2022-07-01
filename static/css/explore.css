@@ -2,11 +2,22 @@
     display: grid;
     grid-template-columns: auto auto auto;
     grid-gap: 2%;
+    padding: 0 20%;
 }
 
 .explore-item{
     background-color: blue;
     color: aliceblue;
+}
+
+.explore-item:hover > .overlay{
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    background-color: black;
+    opacity: 0.5;
+    border-radius: inherit;
+    z-index: 10;
 }
 
 .explore-item > img{
@@ -29,9 +40,6 @@
 }
 
 @media screen and (min-width:600px) {
-    .explore-container{
-        padding: 0 10%;
-    }
     .explore-item{
         height: 20em;
         width: 20em;

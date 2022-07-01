@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.6/dist/css/splide.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <title>{{user}}</title>
     {% block style %}
 
     {% endblock style %}
@@ -21,8 +22,108 @@
 <body>
 
     {% block content %}
+    <!-- header -->
+    <section>
+        <div class="header">
+            <div class="header-container">
+                <div class="logo">
+                    <img src="{% static 'images/Instagram_logo.svg.png' %}" alt="">
+                </div>
+                <div class="serachbar">
+                    <input type="search" name="" id="" placeholder="Search">
+                </div>
+                <div class="icons">
+                    <a href="{% url 'pages:home' %}" class="home">
+                        <i class='fas fa-home'></i>
+                    </a>
+                        
+                    <div class="send">
+                        <i class='far fa-paper-plane'></i>
+                    </div>
+                    <div class="add">
+                        <i class='far fa-plus-square'></i>
+                    </div>
+                    <a href="{% url 'pages:explore' %}" class="explore">
+                        <i class='far fa-compass'></i>
+                    </a>
+                    <div class="heart">
+                        <i class='far fa-heart'></i>
+                    </div>
+                    <div class="profile profile-box">
+                        <img class="profile-box" src="{{request.user.photo.url}}" alt="">
+                    </div>
+            </div>
+        </div>
+    </section>
 
+    <div class="actions-container animate__animated">
+        {% for action in actions %}
+        <div class="action">
+            <div class="action-user-image">
+                <a href="{% url 'profile' action.user %}">
+                    <img src="{{action.user.photo.url}}" alt="">
+                </a>
+            </div>
+            <div class="action-act">
+                
+                {% if action.act %}
+                    {{action.act}}
+                {% endif %}
+                    
+            </div>
+            <div class="action-target">
+                {% if action.act == "follow" or action.act == "unfollow" %}
+                <a href="{% url 'profile' action.target %}">
+                    <img src="{{action.target.photo.url}}" alt="">
+                </a>
+                {% elif action.act == "likes" or  action.act == "posted" %}
+                <a href="{{action.target.get_absolute_url}}">
+                    <img src="{{action.target.image.url}}" alt="">
+                </a>
+                {% endif %}
+                
+            </div>
+            <div class="action-date">
+                {{action.created|timesince}} ago
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+                
+        
+    </div>
+</div>
+
+
+<!-- profile modal -->
+    <!-- note : 
+    برای همه ی المان های داخل باکس یک کلاس تکراری قرار میدم تا با کلیک کردن روی آیتمی که این کلاس رو داده باکس بسته نشه 
+    profile-box -->
+    <div class="profile-modal-container profile-box display-none">
+        <a href="{% url 'profile' request.user %}" class="profile-box profile-link profile-item">
+            <i class="far fa-user-circle"></i>
+            <span>Profile</span>
+        </a>
+        <a href=""  class="profile-box profile-saves profile-item">
+            <i class="far fa-bookmark"></i>
+            <span>Saved</span>
+        </a>
+        <a href=""  class="profile-box profile-settings profile-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <a href=""  class="profile-box profile-switch-accounts profile-item">
+            <!-- <i class="fas fa-repeat-alt"></i> -->
+            <i class="fas fa-random"></i>
+            <span>Switch Accounts</span>
+        </a>
+        <a href="{% url 'logout' %}" class="profile-box logoutbox profile-item">
+            <span></span>
+            <div>Log Out</div> 
+        </a>
+    </div>
     {% endblock content %}
+    <script src="{% static 'js/scripts.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
@@ -33,7 +134,7 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
 
-    <script src="{% static 'js/scripts.js' %}"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.6.0/js/all.min.js"
         integrity="sha512-kWTrl8apDL/aScTYauVsRnGkZv4n7JpH03mIdTmiELoAvAT+CGmfBQx03EMkTT34f5jvyY0DRa/M/it7iecBKw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -189,6 +290,38 @@
             });
         }
     </script>
+
+    <!-- actions -->
+<script>
+    // actions show
+    let heartKey = document.getElementsByClassName("heart")[0];
+    let actionsContainer = document.getElementsByClassName("actions-container")[0];
+
+    document.addEventListener("click", (e)=>{
+        if (!e.target.classList.contains("fa-heart") && !e.target.classList.contains("actions-container") && actionsContainer.classList.contains("show-box")){
+            actionsContainer.classList.remove("show-box");
+        }
+    });
+    heartKey.addEventListener("click", ()=>{
+        actionsContainer.classList.toggle("show-box");
+    });
+    
+</script>
+
+<script>
+    // modal profile box
+    let modalProfile = document.getElementsByClassName("profile-modal-container")[0];
+    let profile = document.getElementsByClassName("profile")[0];
+
+    profile.addEventListener("click", () => {
+        modalProfile.classList.toggle("display-none");
+    });
+    document.addEventListener("click", e => {
+        if (!e.target.classList.contains("profile-box")){
+            modalProfile.classList.add("display-none");
+        }
+    })
+</script>
 </body>
 
 </html>

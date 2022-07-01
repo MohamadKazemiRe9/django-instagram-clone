@@ -9,7 +9,8 @@
 {% block content %}
     <div class="explore-container">
         {% for post in posts %}
-        <a href="{{post.get_absolute_url}}" class="explore-item-{{forloop.counter}} explore-item">
+        <a href="{{post.get_absolute_url}}" class="explore-item-{{forloop.counter|divisibleby:'18'}} explore-item">
+            <div class="overlay"></div>
             <img src="{{post.image.url}}" alt="">
         </a>
         {% endfor %}
